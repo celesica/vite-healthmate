@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { auth } from '../../config/firebase';
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from '../../config/firebase';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -9,7 +10,15 @@ const SignIn = () => {
     const handleSignIn = async (e) => {
         e.preventDefault();
         try {
-            await auth.signInWithEmailAndPassword(email, password);
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleGoogleSignIn = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
         } catch (error) {
             console.error(error);
         }
@@ -48,6 +57,12 @@ const SignIn = () => {
                     Sign In
                 </button>
             </form>
+            <button
+                onClick={handleGoogleSignIn}
+                className="bg-red-500 text-white rounded px-4 py-2 mt-4 w-full"
+            >
+                Sign In With Google
+            </button>
             <a
                 href="#"
                 className="text-blue-500 text-sm mt-4 block text-center"

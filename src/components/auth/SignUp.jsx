@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { auth } from '../../config/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, googleProvider } from '../../config/firebase';
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { updateProfile } from 'firebase/auth';
 
 const SignUp = () => {
@@ -19,6 +19,14 @@ const SignUp = () => {
                 displayName: `${firstName} ${lastName}`
             });
             setSuccessMessage('You have successfully signed up. Please sign in.');
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleGoogleSignIn = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
         } catch (error) {
             console.error(error);
         }
@@ -61,6 +69,9 @@ const SignUp = () => {
                     className="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-full"
                 >
                     Sign Up
+                </button>
+                <button onClick={handleGoogleSignIn} className="bg-red-500 text-white rounded px-4 py-2 mt-4 w-full">
+                    Sign Up with Google
                 </button>
             </form>
         </div>
