@@ -1,61 +1,63 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from '../../config/firebase';
+import { validateEmail } from '../../utils/formValidation';
 
-Modal.setAppElement('#root');
-
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-    },
-};
-
-const ForgotPassword = ({ isOpen, onRequestClose }) => {
+const ForgotPassword = () => {
     const [email, setEmail] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [message, setMessage] = useState('');
+    const [errors, setErrors] = useState({ email: '' });
+
+    const validateForm = () => {
+        const emailError = validateEmail(email);
+        setErrors({ email: emailError });
+        return !emailError;
+    };
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         try {
             await sendPasswordResetEmail(auth, email);
-            setSuccessMessage('Instructions to reset your password has been sent to your email.');
+            setMessage('We have sent you an email with instructions to reset your password.');
         } catch (error) {
             console.error(error);
+            if (error.code === 'auth/user-not-found') {
+                setErrors({ email: 'Email is not registered' });
+            } else {
+                setMessage('Error occurred. Please try again.');
+            }
         }
     };
 
     return (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
-            <h2 className="text-center text-2xl font-bold mb-4">Forgot Password?</h2>
-            <p className="mb-4 text-center">
-                Enter the email address you used when you joined and we'll send you instructions to reset your password.
-            </p>
-            {successMessage ? (
-                <p className="text-green-500 text-center">{successMessage}</p>
-            ) : (
-                <form onSubmit={handleResetPassword}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="border border-gray-300 p-2 rounded w-full"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-full"
-                    >
-                        Reset password
-                    </button>
-                </form>
+        <div className="forgot-password">
+            <h2>Forgot Password?</h2>
+            <p>Enter the email address you used when you joined and we'll send you instructions to reset your password.</p>
+            <form onSubmit={handleResetPassword} className="forgot-password-form">
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border border-gray-300 p-2 rounded w-full"
+                />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-full"
+                >
+                    Reset Password
+                </button>
+            </form>
+            {message && (
+                <div className="mt-4 text-center">
+                    <p>{message}</p>
+                </div>
             )}
-        </Modal>
+        </div>
     );
 };
 
