@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider } from '../../config/firebase';
 import ForgotPassword from './ForgotPassword';
 import { validateEmail, validatePassword } from '../../utils/formValidation';
+import { useAuth } from '../../context/AuthContext';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
-
     const [errors, setErrors] = useState({});
+
+    const navigate = useNavigate();
+
+    const { currentUser } = useAuth();
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/dashboard');
+        }
+    }, [currentUser, navigate]);
+
+    console.log(auth?.currentUser?.email);
 
     const validateForm = () => {
         const emailError = validateEmail(email);
@@ -33,6 +45,8 @@ const SignIn = () => {
         }
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            console.log('Signed in successfully');
+            navigate('/dashboard');
         } catch (error) {
             console.error(error);
             const newErrors = { ...errors };
@@ -51,6 +65,7 @@ const SignIn = () => {
     const handleGoogleSignIn = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
+            navigate('/dashboard');
         } catch (error) {
             console.error(error);
         }

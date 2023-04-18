@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyC55jntqY3WLwrI26MkSRCW0MHHkxvghDk",
@@ -27,4 +27,4 @@ async function addUserToFirestore(uid, firstName, lastName, email, role) {
     });
 }
 
-export { auth, googleProvider, addUserToFirestore };
+export { auth, googleProvider, db, addUserToFirestore };
