@@ -3,7 +3,7 @@ import { auth, db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
 import LoadingScreen from './LoadingScreen';
 import { IoIosNotifications, IoMdSettings } from 'react-icons/io';
-import Avatar from 'react-avatar';
+import LetterAvatar from 'react-lettered-avatar';
 
 const Navbar = () => {
     const { userData } = useAuth();
@@ -24,17 +24,15 @@ const Navbar = () => {
         return <LoadingScreen />;
     }
 
-    const nameInitials = `${userData.firstName.charAt(0)}${userData.lastName.charAt(0)}`;
+    const initials = userData.firstName[0] + userData.lastName[0];
 
-    const getRandomColor = () => {
-        const colors = ['#007bff', '#6610f2', '#6f42c1', '#e83e8c', '#dc3545', '#fd7e14', '#ffc107', '#28a745', '#20c997', '#17a2b8', '#6c757d'];
-        return colors[Math.floor(Math.random() * colors.length)];
+    const randomColor = () => {
+        const red = Math.floor(Math.random() * 256);
+        const green = Math.floor(Math.random() * 256);
+        const blue = Math.floor(Math.random() * 256);
+        return `rgb(${red}, ${green}, ${blue})`;
     };
 
-    const avatarStyle = {
-        marginRight: '2px',
-        backgroundColor: getRandomColor(),
-    };
 
     return (
         <nav className="bg-blue-600 flex justify-between items-center p-4 text-white">
@@ -48,13 +46,12 @@ const Navbar = () => {
             <div className="flex items-center">
                 <IoIosNotifications className="mr-4" />
                 <IoMdSettings className="mr-4" />
-                <Avatar
-                    className="mr-2"
-                    name={`${userData.firstName} ${userData.lastName}`}
-                    size="32"
-                    color="#ffffff"
-                    bgColor="#007bff"
-                    round={true}
+                <LetterAvatar
+                    className="mr-20"
+                    initials={initials}
+                    bgColor={randomColor()}
+                    textColor="#ffffff"
+                    size={40}
                 />
                 <span>{`${userData.firstName} ${userData.lastName}`}</span>
                 <button onClick={handleSignOut} className="ml-4 bg-white text-blue-600 py-1 px-3 rounded">Sign Out</button>
