@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth, googleProvider, addUserToFirestore } from '../../config/firebase';
-import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup, getAdditionalUserInfo } from 'firebase/auth';
 import { updateProfile } from 'firebase/auth';
 import { validateEmail, validatePassword, validateNotEmpty } from '../../utils/formValidation';
 
@@ -39,11 +39,11 @@ const SignUp = () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const uid = userCredential.user.uid;
-            await addUserToFirestore(uid, firstName, lastName, email, 'user');
+            await addUserToFirestore(uid, firstName, lastName, email);
             await updateProfile(userCredential.user, {
                 displayName: `${firstName} ${lastName}`
             });
-            setSuccessMessage('You have successfully signed up. Please sign in.');
+            setSuccessMessage('You have successfully signed up.');
         } catch (error) {
             console.error(error);
             setErrorMessage(error.message);

@@ -1,10 +1,10 @@
 import React from 'react';
-import Welcome from '../components/dashboard/Welcome';
+import Navbar from '../components/dashboard/Navbar.jsx';
 
 const DashboardPage = () => {
     return (
         <div>
-            <Welcome />
+            <Navbar />
         </div>
     );
 };

@@ -51,7 +51,7 @@ const SignIn = () => {
             console.error(error);
             const newErrors = { ...errors };
 
-            if (error.code === 'auth/wrong-password') {
+            if (error.code === 'login/wrong-password') {
                 newErrors.password = 'Wrong password';
             } else if (error.code === 'auth/user-not-found') {
                 newErrors.email = 'Email is not registered';

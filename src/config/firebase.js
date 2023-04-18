@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyC55jntqY3WLwrI26MkSRCW0MHHkxvghDk",
@@ -17,7 +17,7 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
-async function addUserToFirestore(uid, firstName, lastName, email, role) {
+async function addUserToFirestore(uid, firstName, lastName, email, role = 'client') {
     const userRef = doc(db, 'users', uid);
     await setDoc(userRef, {
         firstName: firstName,

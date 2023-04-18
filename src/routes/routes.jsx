@@ -9,7 +9,7 @@ const AppRoutes = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/login" element={<AuthPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<PrivateRoute />} >
                     <Route index element={<DashboardPage />} />
