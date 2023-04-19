@@ -1,8 +1,8 @@
 import { collection, doc, getDoc, updateDoc, setDoc, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-export const createPillarAssessment = async (userID) => {
-    const mainDocRef = doc(db, 'pillarAssessments', `PA - ${userID}`);
+export const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
+    const mainDocRef = doc(db, collectionName, `${docIdPrefix} - ${userID}`);
 
     const mainDocSnapshot = await getDoc(mainDocRef);
     if (!mainDocSnapshot.exists()) {
@@ -11,7 +11,7 @@ export const createPillarAssessment = async (userID) => {
             userID,
             assessmentsCompleted: 0,
             createdDate: new Date(),
-            interpretation: 'Complete all pillar assessments',
+            interpretation: 'Complete all assessments',
             lastModified: new Date(),
             recentSubmission: '',
             funScore: 0,
@@ -29,15 +29,19 @@ export const saveFormSubmission = async (
     interpretation,
     progress,
     formQuestions,
-    totalScore
+    totalScore,
+    mainCollectionName,
+    mainDocIdPrefix,
+    subCollectionName,
+    subDocIdPrefix
 ) => {
-    const mainDocRef = doc(db, 'pillarAssessments', `PA - ${userID}`);
+    const mainDocRef = doc(db, mainCollectionName, `${mainDocIdPrefix} - ${userID}`);
     const mainDocSnapshot = await getDoc(mainDocRef);
 
     if (mainDocSnapshot.exists()) {
         // Query the most recent document with the same userID
-        const funAssessmentsRef = collection(db, 'funAssessments');
-        const q = query(funAssessmentsRef, where('userID', '==', userID), orderBy('submissionDate', 'desc'), limit(1));
+        const subAssessmentsRef = collection(db, subCollectionName);
+        const q = query(subAssessmentsRef, where('userID', '==', userID), orderBy('submissionDate', 'desc'), limit(1));
         const querySnapshot = await getDocs(q);
 
         // Get the most recent totalScore
@@ -68,7 +72,7 @@ export const saveFormSubmission = async (
         });
 
         // Set the reference to point to a new document with the incrementing value
-        const newFunAssessmentRef = doc(db, 'funAssessments', `FA${nextNumber} - ${userID}`);
+        const newSubAssessmentRef = doc(db, subCollectionName, `${subDocIdPrefix}${nextNumber} - ${userID}`);
 
         const submissionDate = new Date();
         const formStatus = progress === 100 ? 'Completed' : 'In Progress';
@@ -87,8 +91,8 @@ export const saveFormSubmission = async (
         };
 
         // Use setDoc to create a new document with the specified name
-        await setDoc(newFunAssessmentRef, submission);
+        await setDoc(newSubAssessmentRef, submission);
     } else {
-        console.error('Pillar assessment does not exist for the given userID');
+        console.error('Assessment does not exist for the given userID');
     }
 };

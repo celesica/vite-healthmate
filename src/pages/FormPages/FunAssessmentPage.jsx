@@ -1,5 +1,5 @@
 import React from 'react';
-import FunAssessment from '../../components/assessments/pillarAssessments/forms/FunAssessment.jsx';
+import FunAssessment from '../../components/assessments/FunAssessment.jsx';
 
 const FunAssessmentPage = () => {
     return (
