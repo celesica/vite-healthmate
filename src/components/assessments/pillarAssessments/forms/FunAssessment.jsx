@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useAuth } from '../../../../context/AuthContext';
-import FunAssessmentData from './FunAssessment.json';
-import { saveFormSubmission, createPillarAssessment  } from '../../../../utils/formSubmission';
+import FunAssessmentData from '../../formData/FunAssessment.json';
+import { saveFormSubmission, createMainAssessment } from '../../../../utils/formSubmission';
 
 const FunAssessment = ({ isModal, closeModal }) => {
     const { currentUser, userData } = useAuth();
     const [progress, setProgress] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [interpretation, setInterpretation] = useState('');
+    const [isSaved, setIsSaved] = useState(false);
 
     const formik = useFormik({
-        initialValues: FunAssessmentData.reduce((acc, question) => {
+        initialValues: JSON.parse(localStorage.getItem('funAssessmentProgress')) || FunAssessmentData.reduce((acc, question) => {
             if (question.type === 'matrix') {
                 question.rows.forEach((_, rowIndex) => {
                     acc[`${question.id}-${rowIndex}`] = '';
@@ -35,35 +36,47 @@ const FunAssessment = ({ isModal, closeModal }) => {
                 closeModal();
             }
 
-            const userID = currentUser.uid;
-            const submissionDate = new Date();
-            const formName = 'Fun Assessment';
-            const formType = 'pillarAssessments';
-            const formProgress = progress;
-            const formQuestions = FunAssessmentData;
-            const formAnswers = Object.entries(values);
+            localStorage.setItem('funAssessmentProgress', JSON.stringify(values));
 
-            await saveFormSubmission(
-                userID,
-                formName,
-                formType,
-                values,
-                interpretationText,
-                formProgress,
-                formQuestions,
-                totalScore
-            );
+            if (progress === 100) {
+                localStorage.removeItem('funAssessmentProgress');
+                const userID = currentUser.uid;
+                const submissionDate = new Date();
+                const formName = 'Fun Assessment';
+                const formType = 'pillarAssessments';
+                const formProgress = progress;
+                const formQuestions = FunAssessmentData;
+                const formAnswers = Object.entries(values);
 
-            console.log('UserID:', userID);
-            console.log('Submission Date:', submissionDate);
-            console.log('Interpretation:', interpretationText);
-            console.log('Form Type:', formType);
-            console.log('Form Status:', formStatus);
-            console.log('Form Progress:', formProgress);
-            console.log('Form Questions:', formQuestions);
-            console.log('Form Answers:', formAnswers);
-            console.log('Form Score:', totalScore);
+                setIsSaved(false);
 
+                await saveFormSubmission(
+                    userID,
+                    formName,
+                    formType,
+                    values,
+                    interpretationText,
+                    formProgress,
+                    formQuestions,
+                    totalScore,
+                    'pillarAssessments',
+                    'PA',
+                    'funAssessments',
+                    'FA'
+                );
+
+                console.log('UserID:', userID);
+                console.log('Submission Date:', submissionDate);
+                console.log('Interpretation:', interpretationText);
+                console.log('Form Type:', formType);
+                console.log('Form Status:', formStatus);
+                console.log('Form Progress:', formProgress);
+                console.log('Form Questions:', formQuestions);
+                console.log('Form Answers:', formAnswers);
+                console.log('Form Score:', totalScore);
+            } else {
+                setIsSaved(true);
+            }
         },
     });
 
@@ -100,7 +113,7 @@ const FunAssessment = ({ isModal, closeModal }) => {
 
     return (
         <>
-            <button onClick={() => createPillarAssessment(currentUser.uid)}>Create Pillar Assessment</button>
+            <button onClick={() => createMainAssessment (currentUser.uid, 'pillarAssessments', 'PA')}>Create Pillar Assessment</button>
             {!submitted ? (
                 <form onSubmit={formik.handleSubmit}>
                     <h1>{userData.displayName}</h1>
@@ -162,8 +175,16 @@ const FunAssessment = ({ isModal, closeModal }) => {
                 </form>
             ) : (
                 <div>
-                    <h1>Your results are in!</h1>
-                    <p>{interpretation}</p>
+                    {isSaved ? (
+                        <div>
+                            <h1>Your progress has been saved!</h1>
+                        </div>
+                    ) : (
+                        <div>
+                            <h1>Your results are in!</h1>
+                            <p>{interpretation}</p>
+                        </div>
+                    )}
                 </div>
             )}
         </>
