@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '../config/firebase';
+import { auth, db, addUserToFirestore } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
         return data ? JSON.parse(data) : null;
     });
 
+    const [isGoogleUser, setIsGoogleUser] = useState(false);
+
     useEffect(() => {
         if (currentUser) {
             const userRef = doc(db, 'users', currentUser.uid);
@@ -36,7 +38,23 @@ export const AuthProvider = ({ children }) => {
     }, [currentUser]);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const providerId = user.providerData[0]?.providerId;
+                if (providerId === 'google.com') {
+                    setIsGoogleUser(true);
+                    const userRef = doc(db, 'users', user.uid);
+                    const userDataSnapshot = await getDoc(userRef);
+                    if (!userDataSnapshot.exists()) {
+                        await addUserToFirestore(
+                            user.uid,
+                            user.displayName,
+                            user.email,
+                            user.photoURL
+                        );
+                    }
+                }
+            }
             setCurrentUser(user);
             localStorage.setItem('currentUser', JSON.stringify(user));
         });
@@ -47,6 +65,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         currentUser,
         userData,
+        isGoogleUser,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

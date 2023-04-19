@@ -6,14 +6,21 @@ import { IoIosNotifications, IoMdSettings } from 'react-icons/io';
 import LetterAvatar from 'react-lettered-avatar';
 
 const Navbar = () => {
-    const { userData } = useAuth();
+    const { userData, currentUser, isGoogleUser } = useAuth();
     const [loading, setLoading] = useState(true);
+    const [displayName, setDisplayName] = useState("");
+
 
     useEffect(() => {
-        if (userData) {
+        if (currentUser) {
+            if (userData || isGoogleUser) {
+                setDisplayName(userData?.displayName || currentUser.displayName);
+                setLoading(false);
+            }
+        } else {
             setLoading(false);
         }
-    }, [userData]);
+    }, [userData, currentUser, isGoogleUser]);
 
     const handleSignOut = () => {
         localStorage.removeItem('userData');
@@ -24,7 +31,17 @@ const Navbar = () => {
         return <LoadingScreen />;
     }
 
-    const initials = userData.firstName[0] + userData.lastName[0];
+    const getInitials = (displayName) => {
+        if (!displayName) return "LA";
+        return displayName
+            .split(' ')
+            .map((word) => word[0])
+            .join(' ')
+            .toUpperCase();
+    };
+
+    const initials = getInitials(displayName);
+    console.log(initials);
 
     const randomColor = () => {
         const red = Math.floor(Math.random() * 256);
@@ -32,7 +49,6 @@ const Navbar = () => {
         const blue = Math.floor(Math.random() * 256);
         return `rgb(${red}, ${green}, ${blue})`;
     };
-
 
     return (
         <nav className="bg-blue-600 flex justify-between items-center p-4 text-white">
@@ -48,12 +64,12 @@ const Navbar = () => {
                 <IoMdSettings className="mr-4" />
                 <LetterAvatar
                     className="mr-20"
-                    initials={initials}
+                    name={initials}
                     bgColor={randomColor()}
                     textColor="#ffffff"
                     size={40}
                 />
-                <span>{`${userData.firstName} ${userData.lastName}`}</span>
+                <span>{userData?.displayName || currentUser.displayName}</span>
                 <button onClick={handleSignOut} className="ml-4 bg-white text-blue-600 py-1 px-3 rounded">Sign Out</button>
             </div>
         </nav>

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "q1",
+    "label": "Which most closely applies to you?",
+    "type": "radio",
+    "options": [
+      {
+        "label": "I am in touch with what's fun to me, and I do it often.",
+        "score": "4"
+      },
+      {
+        "label": "I am in touch with what's fun, and I long to do it more often.",
+        "score": "3"
+      },
+      {
+        "label": "I don't have enough fun.",
+        "score": "2"
+      },
+      {
+        "label": "I am not sure what fun is anymore.",
+        "score": "1"
+      },
+      {
+        "label": "Nothing seems fun anymore.",
+        "score": "0"
+      }
+    ]
+  },
+  {
+    "id": "q2",
+    "label": "How often do you take time for...",
+    "type": "matrix",
+    "rows": [
+      "Hobbies and recreation overall",
+      "Fun activities: engage in a hobby, gardening for fun, arts and crafts, listening to music, etc",
+      "Exercise: hiking, running, walking, going to the gym, doing yoga, swimming, cycling, etc",
+      "Games: playing group sports, playing board games, card games, puzzles, etc.",
+      "Connecting: calling friends or family members, going out with friends, connecting with individuals on social media, etc.",
+      "Silliness: deliberately engaging in playful activities that are just for the fun of it and bring out your inner 7-year old",
+      "Self-improvement: read or listen to personal development",
+      "Spiritual: get out in nature, meet with people from your belief group, meditate, etc"
+    ],
+    "columns": [
+      {
+        "label": "Never or almost never",
+        "score": "0"
+      },
+      {
+        "label": "1 time per week",
+        "score": "1"
+      },
+      {
+        "label": "2-3 times per week",
+        "score": "2"
+      },
+      {
+        "label": "4-5 times per week",
+        "score": "3"
+      },
+      {
+        "label": "Daily",
+        "score": "4"
+      }
+    ]
+  },
+  {
+    "id": "q3",
+    "label": "How often do you spend time on...",
+    "type": "matrix",
+    "rows": [
+      "Venting: calling a friend/family member to gripe or gossip",
+      "Distractions: eat, watch TV, play video games, etc",
+      "Chores: laundry, cleaning, organizing, yard work, etc."
+    ],
+    "columns": [
+      {
+        "label": "Daily",
+        "score": "0"
+      },
+      {
+        "label": "4-5 times per week",
+        "score": "1"
+      },
+      {
+        "label": "2-3 times per week",
+        "score": "2"
+      },
+      {
+        "label": "1 time per week",
+        "score": "3"
+      },
+      {
+        "label": "Never or almost never",
+        "score": "4"
+      }
+    ]
+  }
+]
