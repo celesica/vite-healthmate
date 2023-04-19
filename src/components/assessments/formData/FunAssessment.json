@@ -6,11 +6,11 @@
     "options": [
       {
         "label": "I am in touch with what's fun to me, and I do it often.",
-        "score": "4"
+        "score": "0"
       },
       {
         "label": "I am in touch with what's fun, and I long to do it more often.",
-        "score": "3"
+        "score": "1"
       },
       {
         "label": "I don't have enough fun.",
@@ -18,11 +18,11 @@
       },
       {
         "label": "I am not sure what fun is anymore.",
-        "score": "1"
+        "score": "3"
       },
       {
         "label": "Nothing seems fun anymore.",
-        "score": "0"
+        "score": "4"
       }
     ]
   },
@@ -43,11 +43,11 @@
     "columns": [
       {
         "label": "Never or almost never",
-        "score": "0"
+        "score": "4"
       },
       {
         "label": "1 time per week",
-        "score": "1"
+        "score": "3"
       },
       {
         "label": "2-3 times per week",
@@ -55,11 +55,11 @@
       },
       {
         "label": "4-5 times per week",
-        "score": "3"
+        "score": "1"
       },
       {
         "label": "Daily",
-        "score": "4"
+        "score": "0"
       }
     ]
   },
@@ -75,11 +75,11 @@
     "columns": [
       {
         "label": "Daily",
-        "score": "0"
+        "score": "4"
       },
       {
         "label": "4-5 times per week",
-        "score": "1"
+        "score": "3"
       },
       {
         "label": "2-3 times per week",
@@ -87,11 +87,11 @@
       },
       {
         "label": "1 time per week",
-        "score": "3"
+        "score": "1"
       },
       {
         "label": "Never or almost never",
-        "score": "4"
+        "score": "0"
       }
     ]
   }

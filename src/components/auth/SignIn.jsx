@@ -81,7 +81,6 @@ const SignIn = () => {
 
     return (
         <div className="signin">
-            {/*{errors.signIn && <p className="text-red-500">{errors.signIn}</p>}*/}
             <form onSubmit={handleSignIn} className="signin-form">
                 <input
                     type="email"

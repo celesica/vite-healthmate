@@ -99,7 +99,7 @@ const AssessmentForm = ({
                     <h1 className="text-2xl font-bold">{userData.displayName}</h1>
                     <h2 className="text-lg font-bold">Type: {mainType}</h2>
                     <p className="text-gray-500 mb-4">
-                        Date: {new Date().toLocaleString()}
+                        Date: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                     </p>
                     {formQuestions.map((question) => (
                         <div key={question.id}>

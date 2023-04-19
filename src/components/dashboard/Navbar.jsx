@@ -54,8 +54,8 @@ const Navbar = () => {
         <nav className="bg-blue-600 flex justify-between items-center p-4 text-white">
             <div className="flex items-center">
                 <img src="/healthmate.png" alt="HealthMate Logo" className="h-8 mr-4" />
-                <a href="#" className="mr-4">Dashboard</a>
-                <a href="#" className="mr-4">Assessments</a>
+                <a href="/dashboard" className="mr-4">Dashboard</a>
+                <a href="/assessments" className="mr-4">Assessments</a>
                 <a href="#" className="mr-4">Analytics</a>
                 <a href="#" className="mr-4">Resources</a>
             </div>
