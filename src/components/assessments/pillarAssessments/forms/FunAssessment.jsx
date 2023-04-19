@@ -28,14 +28,6 @@ const FunAssessment = ({ isModal, closeModal }) => {
 
             const interpretationText = interpretScore(totalScore);
 
-            // await setDoc(formRef, {
-            //     values,
-            //     totalScore,
-            //     interpretation: interpretationText,
-            //     formStatus,
-            //     timestamp: new Date(),
-            // });
-
             setInterpretation(interpretationText);
             setSubmitted(true);
 

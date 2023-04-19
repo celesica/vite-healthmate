@@ -6,6 +6,7 @@ export const createPillarAssessment = async (userID) => {
 
     const mainDocSnapshot = await getDoc(mainDocRef);
     if (!mainDocSnapshot.exists()) {
+
         await setDoc(mainDocRef, {
             userID,
             assessmentsCompleted: 0,
@@ -15,7 +16,7 @@ export const createPillarAssessment = async (userID) => {
             recentSubmission: '',
             funScore: 0,
             sleepScore: 0,
-            totalScore: 0,
+            totalScore: 0
         });
     }
 };
@@ -50,7 +51,9 @@ export const saveFormSubmission = async (
             assessmentsCompleted: mainDocSnapshot.data().assessmentsCompleted + 1,
             lastModified: new Date(),
             recentSubmission: formName,
-            funScore: recentTotalScore,
+            funScore: totalScore,
+            sleepScore: mainDocSnapshot.data().sleepScore,
+            totalScore: totalScore + mainDocSnapshot.data().sleepScore,
         };
 
         await updateDoc(mainDocRef, mainDocUpdate);
