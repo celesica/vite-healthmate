@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { auth, db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
 import LoadingScreen from './LoadingScreen';

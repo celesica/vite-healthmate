@@ -1,0 +1,25 @@
+/*.auth-container {*/
+/*    position: relative;*/
+/*    transition: left 0.5s ease;*/
+/*    background: #a2bcc3;*/
+/*}*/
+
+/*.auth-content {*/
+/*    position: absolute;*/
+/*    width: 50%;*/
+/*    height: 100%;*/
+/*    top: 50%;*/
+/*    transform: translate(0%, -50%);*/
+/*    z-index: 1;*/
+/*    transition: left 0.5s ease;*/
+/*    background-color: white;*/
+/*}*/
+
+/*.slide-left .auth-content {*/
+/*    left: 0%;*/
+/*}*/
+
+/*.slide-right .auth-content {*/
+/*    left: 46%;*/
+/*}*/
+

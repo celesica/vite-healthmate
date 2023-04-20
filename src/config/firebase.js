@@ -27,4 +27,4 @@ async function addUserToFirestore(uid, displayName, email, photoURL, role = 'cli
     });
 }
 
-export { auth, googleProvider, db, addUserToFirestore };
+export { firebaseConfig, auth, googleProvider, db, addUserToFirestore };
