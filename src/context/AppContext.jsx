@@ -49,6 +49,8 @@ const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
             recentSubmission: '',
             funScore: 0,
             sleepScore: 0,
+            exerciseScore: 0,
+            environmentScore: 0,
             totalScore: 0
         });
     }
@@ -88,7 +90,12 @@ const saveFormSubmission = async (
             recentSubmission: formName,
             funScore: formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore,
             sleepScore: formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore,
-            totalScore: (formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore) + (formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore),
+            exerciseScore: formName === 'Exercise Assessment' ? testScore : mainDocSnapshot.data().exerciseScore,
+            environmentScore: formName === 'Environment Assessment' ? testScore : mainDocSnapshot.data().environmentScore,
+            totalScore: (formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore) +
+                (formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore) +
+                (formName === 'Exercise Assessment' ? testScore : mainDocSnapshot.data().exerciseScore) +
+                (formName === 'Environment Assessment' ? testScore : mainDocSnapshot.data().environmentScore),
         };
 
         await updateDoc(mainDocRef, mainDocUpdate);

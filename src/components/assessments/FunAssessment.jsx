@@ -1,11 +1,11 @@
 import React from 'react';
 import AssessmentForm from './AssessmentForm.jsx';
-import FunAssessmentData from './formData/FunAssessment.json';
+import FunQuestions from './formData/FunQuestions.json';
 
 const FunAssessment = ({ isModal, closeModal }) => {
     const storageName = 'funAssessmentProgress';
 
-    const initialFormValues = FunAssessmentData.reduce((acc, question) => {
+    const initialFormValues = FunQuestions.reduce((acc, question) => {
         if (question.type === 'matrix') {
             question.rows.forEach((_, rowIndex) => {
                 acc[`${question.id}-${rowIndex}`] = '';
@@ -38,7 +38,7 @@ const FunAssessment = ({ isModal, closeModal }) => {
             formType="pillarAssessments"
             mainType="Obstacles and Pillars Assessment"
             initialFormValues={initialFormValues}
-            formQuestions={FunAssessmentData}
+            formQuestions={FunQuestions}
             interpretScore={interpretScore}
             dataTypes={dataTypes}
             storageName={storageName}

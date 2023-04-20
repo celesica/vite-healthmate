@@ -1,11 +1,11 @@
 import React from 'react';
 import AssessmentForm from './AssessmentForm.jsx';
-import SleepAssessmentData from './formData/SleepAssessment.json';
+import SleepQuestions from './formData/SleepQuestions.json';
 
 const SleepAssessment = ({ isModal, closeModal }) => {
     const storageName = 'sleepAssessmentProgress';
 
-    const initialFormValues = SleepAssessmentData.reduce((acc, question) => {
+    const initialFormValues = SleepQuestions.reduce((acc, question) => {
         if (question.type === 'matrix') {
             question.rows.forEach((_, rowIndex) => {
                 acc[`${question.id}-${rowIndex}`] = '';
@@ -39,7 +39,7 @@ const SleepAssessment = ({ isModal, closeModal }) => {
             formType="pillarAssessments"
             mainType="Obstacles and Pillars Assessment"
             initialFormValues={initialFormValues}
-            formQuestions={SleepAssessmentData}
+            formQuestions={SleepQuestions}
             interpretScore={interpretScore}
             dataTypes={dataTypes}
             storageName={storageName}

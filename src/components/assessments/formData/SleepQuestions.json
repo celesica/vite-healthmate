@@ -1,0 +1,141 @@
+[
+  {
+    "id": "q1",
+    "label": "Usual bedtime?",
+    "type": "radio",
+    "options": [
+      {
+        "score": "0",
+        "label": "Before 10pm"
+      },
+      {
+        "score": "1",
+        "label": "Between 10 and 11pm"
+      },
+      {
+        "score": "2",
+        "label": "Between 11pm and 12am"
+      },
+      {
+        "score": "3",
+        "label": "After midnight"
+      }
+    ]
+  },
+  {
+    "id": "q2",
+    "label": "Usual time you get up in the morning?",
+    "type": "radio",
+    "options": [
+      {
+        "score": "0",
+        "label": "6am or earlier"
+      },
+      {
+        "score": "1",
+        "label": "Between 6 and 7:30am"
+      },
+      {
+        "score": "2",
+        "label": "Between 7:30 and 9am"
+      },
+      {
+        "score": "3",
+        "label": "After 9am"
+      }
+    ]
+  },
+  {
+    "id": "q3",
+    "label": "Average number of hours you sleep?",
+    "type": "radio",
+    "options": [
+      {
+        "score": "0",
+        "label": "8 or more"
+      },
+      {
+        "score": "1",
+        "label": "Between 7 and 8"
+      },
+      {
+        "score": "2",
+        "label": "Between 6 and 7"
+      },
+      {
+        "score": "3",
+        "label": "Less than 6"
+      }
+    ]
+  },
+  {
+    "id": "q4",
+    "label": "How would you rate the quality of your sleep?",
+    "type": "radio",
+    "options": [
+      {
+        "score": "0",
+        "label": "Excellent"
+      },
+      {
+        "score": "1",
+        "label": "Good"
+      },
+      {
+        "score": "2",
+        "label": "Okay"
+      },
+      {
+        "score": "3",
+        "label": "Poor"
+      }
+    ]
+  },
+  {
+    "id": "q5",
+    "label": "Sleeping Habits Part 1",
+    "type": "matrix",
+    "rows": [
+      "Do you have an established evening routine/set of habits?",
+      "Do you sleep through the night?",
+      "Do you sleep in a darkened room?",
+      "Do you feel rested when you wake up?"
+    ],
+    "columns": [
+      {
+        "label": "Yes",
+        "score": "0"
+      },
+      {
+        "label": "No",
+        "score": "3"
+      }
+    ]
+  },
+  {
+    "id": "q6",
+    "label": "Sleeping Habits Part 2",
+    "type": "matrix",
+    "rows": [
+      "Do you have trouble falling asleep?",
+      "Do you have trouble staying asleep?",
+      "Do you have any electronic devices in the room where you sleep?",
+      "Do you awaken to an alarm clock?",
+      "Do you watch TV or use the computer right before going to sleep?",
+      "Do you eat anything within 3 hours of bedtime?",
+      "Do you have problems with insomnia?",
+      "Do you snore?",
+      "Do you use a C-Pap machine?"
+    ],
+    "columns": [
+      {
+        "label": "Yes",
+        "score": "3"
+      },
+      {
+        "label": "No",
+        "score": "0"
+      }
+    ]
+  }
+]
