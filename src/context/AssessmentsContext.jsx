@@ -1,7 +1,31 @@
-import { collection, doc, getDoc, updateDoc, setDoc, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import React, { createContext, useReducer, useContext } from 'react';
+import { getFirestore, collection, doc, getDoc, updateDoc, setDoc, query, where, getDocs, orderBy, limit  } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../config/firebase';
+import { useAuth } from './AuthContext';
 
-export const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
+initializeApp(firebaseConfig);
+const db = getFirestore();
+
+const AssessmentsContext = createContext();
+
+const initialState = {
+    assessments: [],
+    isLoading: true,
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case 'SET_ASSESSMENTS':
+            return { ...state, assessments: action.payload };
+        case 'SET_LOADING':
+            return { ...state, isLoading: action.payload };
+        default:
+            return state;
+    }
+};
+
+const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
     const mainDocRef = doc(db, collectionName, `${docIdPrefix} - ${userID}`);
 
     const mainDocSnapshot = await getDoc(mainDocRef);
@@ -21,7 +45,7 @@ export const createMainAssessment = async (userID, collectionName, docIdPrefix) 
     }
 };
 
-export const saveFormSubmission = async (
+const saveFormSubmission = async (
     userID,
     formName,
     formType,
@@ -29,7 +53,7 @@ export const saveFormSubmission = async (
     interpretation,
     progress,
     formQuestions,
-    totalScore,
+    testScore,
     mainCollectionName,
     mainDocIdPrefix,
     subCollectionName,
@@ -39,15 +63,13 @@ export const saveFormSubmission = async (
     const mainDocSnapshot = await getDoc(mainDocRef);
 
     if (mainDocSnapshot.exists()) {
-        // Query the most recent document with the same userID
         const subAssessmentsRef = collection(db, subCollectionName);
         const q = query(subAssessmentsRef, where('userID', '==', userID), orderBy('submissionDate', 'desc'), limit(1));
         const querySnapshot = await getDocs(q);
 
-        // Get the most recent totalScore
-        let recentTotalScore = 0;
+        let recentTestScore = 0;
         querySnapshot.forEach((docSnapshot) => {
-            recentTotalScore = docSnapshot.data().formScore;
+            recentTestScore = docSnapshot.data().formScore;
         });
 
         const mainDocUpdate = {
@@ -55,9 +77,9 @@ export const saveFormSubmission = async (
             assessmentsCompleted: mainDocSnapshot.data().assessmentsCompleted + 1,
             lastModified: new Date(),
             recentSubmission: formName,
-            funScore: totalScore,
-            sleepScore: mainDocSnapshot.data().sleepScore,
-            totalScore: totalScore + mainDocSnapshot.data().sleepScore,
+            funScore: formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore,
+            sleepScore: formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore,
+            totalScore: (formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore) + (formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore),
         };
 
         await updateDoc(mainDocRef, mainDocUpdate);
@@ -87,7 +109,7 @@ export const saveFormSubmission = async (
             formProgress: progress,
             formQuestions,
             formAnswers: formValues,
-            formScore: totalScore,
+            formScore: testScore,
         };
 
         // Use setDoc to create a new document with the specified name
@@ -96,3 +118,35 @@ export const saveFormSubmission = async (
         console.error('Assessment does not exist for the given userID');
     }
 };
+
+export const AssessmentsProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { currentUser } = useAuth();
+
+    const fetchAssessments = async () => {
+        try {
+            const assessmentsSnapshot = await getDocs(collection(db, 'assessments'));
+            const assessments = assessmentsSnapshot.docs.map((doc) => doc.data());
+            dispatch({ type: 'SET_ASSESSMENTS', payload: assessments });
+        } catch (error) {
+            console.error('Error fetching assessments:', error);
+        }
+    };
+
+    React.useEffect(() => {
+        if (currentUser) {
+            fetchAssessments();
+        } else {
+            dispatch({ type: 'SET_ASSESSMENTS', payload: [] });
+        }
+        dispatch({ type: 'SET_LOADING', payload: false });
+    }, [currentUser]);
+
+    return (
+        <AssessmentsContext.Provider value={{ state, dispatch, createMainAssessment, saveFormSubmission }}>
+            {children}
+        </AssessmentsContext.Provider>
+    );
+};
+
+export const useAssessmentsContext = () => useContext(AssessmentsContext);

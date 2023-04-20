@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useAuth } from '../../context/AuthContext';
-import { saveFormSubmission, createMainAssessment } from '../../utils/formSubmission';
+import { useAppContext } from '../../context/AppContext';
 
 const AssessmentForm = ({
     formName,
@@ -14,6 +14,7 @@ const AssessmentForm = ({
     mainType
 }) => {
     const { currentUser, userData } = useAuth();
+    const { createMainAssessment, saveFormSubmission } = useAppContext();
     const [progress, setProgress] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [interpretation, setInterpretation] = useState('');
@@ -23,11 +24,11 @@ const AssessmentForm = ({
         initialValues:
             JSON.parse(localStorage.getItem(storageName)) || initialFormValues,
         onSubmit: async (values) => {
-            const totalScore = Object.values(values).reduce((acc, value) => acc + parseInt(value, 10), 0);
-            console.log('Total Score:', totalScore);
+            const testScore = Object.values(values).reduce((acc, value) => acc + parseInt(value, 10), 0);
+            console.log('Total Score:', testScore);
             const formStatus = progress === 100 ? 'Completed' : 'In Progress';
 
-            const interpretationText = interpretScore(totalScore);
+            const interpretationText = interpretScore(testScore);
 
             setInterpretation(interpretationText);
             setSubmitted(true);
@@ -51,7 +52,7 @@ const AssessmentForm = ({
                     interpretationText,
                     formProgress,
                     formQuestions,
-                    totalScore,
+                    testScore,
                     ...dataTypes
                 );
 
@@ -63,7 +64,7 @@ const AssessmentForm = ({
                 console.log('Form Progress:', formProgress);
                 console.log('Form Questions:', formQuestions);
                 console.log('Form Answers:', formAnswers);
-                console.log('Form Score:', totalScore);
+                console.log('Form Score:', testScore);
             } else {
                 setIsSaved(true);
             }
