@@ -34,21 +34,24 @@ const ForgotPassword = () => {
 
     return (
         <div className="forgot-password">
-            <h2>Forgot Password?</h2>
-            <p>Enter the email address you used when you joined and we'll send you instructions to reset your password.</p>
+            <h2 className="text-2xl font-bold text-darkTeal mt-5 mb-3">
+                Forgot Password?
+            </h2>
+            <p className="text-sm text-gray-500">Enter the email address you used when you joined and we'll send you instructions to reset your password.</p>
             <form onSubmit={handleResetPassword} className="forgot-password-form">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border border-gray-300 p-2 rounded w-full"
-                />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-full"
-                >
+                <div className="relative mt-5 mb-5">
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder=" "
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="block px-2.5 pb-2.5 pt-4 w-full text-sm] text-darkTeal bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-ownTeal peer"
+                    />
+                    <label htmlFor="email" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-ownTeal peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
+                    {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
+                </div>
+                <button type="submit" className="w-full text-white bg-gradient-to-r from-ownTeal to-ownOrange hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-xl shadow-lg text-sm px-5 py-4 text-center mr-2 mb-3 mt-4">
                     Reset Password
                 </button>
             </form>

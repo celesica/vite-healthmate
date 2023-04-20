@@ -10,26 +10,32 @@ const AuthPage = () => {
         setIsSignIn(!isSignIn);
     };
 
+    const handleToggleClick = (event) => {
+        if (event.target.id === "signIn" && !isSignIn) {
+            toggleAuthMode();
+        } else if (event.target.id === "signUp" && isSignIn) {
+            toggleAuthMode();
+        }
+    };
+
     return (
-        <div className="flex h-screen">
-            <div className="w-2/5 flex items-center justify-center">
-                <h1 className="text-4xl font-bold text-white">INE HealthMate</h1>
+        <div className="flex flex-col h-screen md:flex-row bg-left-image">
+            <div className="hidden md:block w-2/6 flex items-center justify-center">
             </div>
-            <div className="w-3/5 flex items-center justify-center">
-                <div className={`auth-container bg-white p-10 rounded-2xl  w-full max-w-lg shadow-gray-300`}>
+            <div className="w-full md:w-4/6 flex items-center justify-center">
+                <div className={`auth-container bg-white p-8 md:p-12 rounded-2xl w-full max-w-lg shadow-gray-300`}>
+                    <img src="/healthmate-main.png" alt="INE HealthMate" className="logo md:h-auto w-auto mx-auto mb-6 md:mb-8" />
+                    <div className="mt-3 w-64 toggle-container relative inline-flex items-center rounded-full cursor-pointer text-darkTeal text-sm mb-2 border-mediumTeal border-4 font-medium">
+                        <div className={`absolute left-0 top-0 w-1/2 h-full transition-all duration-500 rounded-full ${isSignIn ? 'bg-ownTeal' : 'bg-ownTeal transform translate-x-full'}`}></div>
+                        <span id="signIn" onClick={handleToggleClick} className="z-10 px-4 py-2 rounded-l-full w-1/2 text-center cursor-pointer">
+                            <span className={`${isSignIn ? 'text-white' : 'text-transition'} pointer-events-none transition-all duration-250`}>Sign In</span>
+                        </span>
+                        <span id="signUp" onClick={handleToggleClick} className="z-10 px-4 py-2 rounded-r-full w-1/2 text-center cursor-pointer">
+                            <span className={`${!isSignIn ? 'text-white' : 'text-transition'} pointer-events-none transition-all duration-250`}>Sign Up</span>
+                        </span>
+                    </div>
                     <div className={`auth-content`}>
                         {isSignIn ? <SignIn /> : <SignUp />}
-                    </div>
-                    <div className="auth-actions flex justify-center mt-4 fixed top-5 right-10 text-sm text-gray-500">
-                        <span className="mr-2">
-                            {isSignIn ? 'Don\'t have an account?' : 'Already have an account?'}
-                        </span>
-                        <button
-                            onClick={toggleAuthMode}
-                            className="text-ownTeal"
-                        >
-                            {isSignIn ? 'Sign Up' : 'Sign In'}
-                        </button>
                     </div>
                 </div>
             </div>

@@ -81,9 +81,6 @@ const SignIn = () => {
 
     return (
         <div className="signin">
-            <h2 className="text-2xl font-bold text-darkTeal mb-[20px]">
-                Sign In
-            </h2>
             <form onSubmit={handleSignIn} className="signin-form">
                 <div className="relative mt-5 mb-5">
                     <input

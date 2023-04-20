@@ -1,25 +1,26 @@
-/*.auth-container {*/
-/*    position: relative;*/
-/*    transition: left 0.5s ease;*/
-/*    background: #a2bcc3;*/
-/*}*/
+.bg-left-image {
+    background-image: url('https://ik.imagekit.io/celesica/tr:w-1200,h-1200/home-bg.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 1100px;
+    background-position-x: 1%;
+}
 
-/*.auth-content {*/
-/*    position: absolute;*/
-/*    width: 50%;*/
-/*    height: 100%;*/
-/*    top: 50%;*/
-/*    transform: translate(0%, -50%);*/
-/*    z-index: 1;*/
-/*    transition: left 0.5s ease;*/
-/*    background-color: white;*/
-/*}*/
+.h-screen {
+    border-bottom: 50px solid #106A67;
+    background-color: #a0dccc;
+    overflow: hidden;
+}
 
-/*.slide-left .auth-content {*/
-/*    left: 0%;*/
-/*}*/
+.logo {
+    width: 40% !important;
+}
 
-/*.slide-right .auth-content {*/
-/*    left: 46%;*/
-/*}*/
+.auth-container {
+    height: 760px;
+}
 
+.text-transition {
+    transition: color 250ms;
+    transition-delay: 250ms;
+}

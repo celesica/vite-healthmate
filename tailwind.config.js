@@ -21,7 +21,8 @@ export default {
       ownGray: '#A2BCC3',
       ownYellow: '#FFAB5D',
       ownOrange: '#EA7733',
-      superLightTeal: '#edf2f3'
+      superLightTeal: '#edf2f3',
+      mediumTeal: '#dbf1ee',
     }
   },
   plugins: [require("flowbite/plugin")],
