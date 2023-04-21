@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import * as d3Zoom from 'd3-zoom';
 import { useChartDataContext } from '../../context/ChartDataContext';
 
 const PillarAssessmentChart = () => {
@@ -8,49 +9,56 @@ const PillarAssessmentChart = () => {
 
     const animateChart = () => {
         const svg = d3.select(chartRef.current).select('svg');
+        const lines = ['fun-line', 'sleep-line', 'exercise-line'];
 
-        const funPath = svg.select('.fun-line');
-        const funPathLength = funPath.node().getTotalLength();
-        funPath
-            .attr('stroke-dasharray', `${funPathLength} ${funPathLength}`)
-            .attr('stroke-dashoffset', funPathLength)
-            .transition()
-            .duration(2000)
-            .ease(d3.easeLinear)
-            .attr('stroke-dashoffset', 0);
-
-        const sleepPath = svg.select('.sleep-line');
-        const sleepPathLength = sleepPath.node().getTotalLength();
-        sleepPath
-            .attr('stroke-dasharray', `${sleepPathLength} ${sleepPathLength}`)
-            .attr('stroke-dashoffset', sleepPathLength)
-            .transition()
-            .duration(2000)
-            .ease(d3.easeLinear)
-            .attr('stroke-dashoffset', 0);
-
+        lines.forEach(lineClass => {
+            const linePath = svg.select(`.${lineClass}`);
+            const linePathLength = linePath.node().getTotalLength();
+            linePath
+                .attr('stroke-dasharray', `${linePathLength} ${linePathLength}`)
+                .attr('stroke-dashoffset', linePathLength)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeLinear)
+                .attr('stroke-dashoffset', 0);
+        });
     };
 
     console.log(state.chartData);
 
     useEffect(() => {
-        if (!chartRef.current || !state.chartData.funAssessments.length || !state.chartData.sleepAssessments.length) return;
+        // Exit early if chart data is not yet available
+        if (!chartRef.current ||
+            !state.chartData.funAssessments.length ||
+            !state.chartData.sleepAssessments.length ||
+            !state.chartData.exerciseAssessments.length) return;
 
+        // Clear the chart before rendering
         d3.select(chartRef.current).selectAll('*').remove();
+
         // Combine and sort data by date
-        const combinedData = [...state.chartData.funAssessments, ...state.chartData.sleepAssessments].sort(
-            (a, b) => new Date(a.submissionDate) - new Date(b.submissionDate),
-        );
+        const combinedData = [
+            ...state.chartData.funAssessments,
+            ...state.chartData.sleepAssessments,
+            ...state.chartData.exerciseAssessments
+        ].sort((a, b) => new Date(a.submissionDate) - new Date(b.submissionDate),);
 
-        // Process data, create an array of objects containing date, funScore, and sleepScore
+        // Process data, create an array of objects containing date and scores
         const processedData = combinedData.map((data) => {
-            const isFun = data.formType === 'pillarAssessments' && data.formName === "Fun Assessment";
-            const isSleep = data.formType === 'pillarAssessments' && data.formName === "Sleep Assessment";
-
+            const isFun =
+                data.formType === 'pillarAssessments' &&
+                data.formName === "Fun Assessment";
+            const isSleep =
+                data.formType === 'pillarAssessments' &&
+                data.formName === "Sleep Assessment";
+            const isExercise =
+                data.formType === 'pillarAssessments' &&
+                data.formName === "Exercise Assessment";
             return {
                 date: data.submissionDate.toDate(),
                 funScore: isFun ? data.formScore : undefined,
                 sleepScore: isSleep ? data.formScore : undefined,
+                exerciseScore: isExercise ? data.formScore : undefined,
             };
         });
 
@@ -60,27 +68,29 @@ const PillarAssessmentChart = () => {
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        // Create scales
-        const x = d3.scaleTime().range([0, width]);
-        const y = d3.scaleLinear().range([height, 0]);
+        // Define scales and axes
+        const x = d3.scaleTime()
+            .domain(d3.extent(processedData, d => new Date(d.date)))
+            .range([0, width]);
+        const xAxis = d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%m/%d")) // format the tick labels
+            .ticks(d3.timeDay.every(1)); // set the tick interval to every day
+
+        const y = d3.scaleLinear().range([height, 0]).domain([0, 105]);
+        const yAxis = d3.axisLeft(y).tickValues(d3.range(0, 105, 5));
 
         // Create line generators
-        const funLine = d3.line()
-            .defined(d => !isNaN(d.funScore))
-            .x(d => x(new Date(d.date)))
-            .y(d => y(d.funScore))
-            .curve(d3.curveMonotoneX);
+        const createLineGenerator = (scoreType) => {
+            return d3.line()
+                .defined(d => !isNaN(d[scoreType]))
+                .x(d => x(new Date(d.date)))
+                .y(d => y(d[scoreType]))
+                .curve(d3.curveMonotoneX);
+        };
+        const funLine = createLineGenerator('funScore');
+        const sleepLine = createLineGenerator('sleepScore');
+        const exerciseLine = createLineGenerator('exerciseScore');
 
-        const sleepLine = d3.line()
-            .defined(d => !isNaN(d.sleepScore))
-            .x(d => x(new Date(d.date)))
-            .y(d => y(d.sleepScore))
-            .curve(d3.curveMonotoneX);
-
-
-        // Set the domains of the scales
-        x.domain(d3.extent(processedData, d => new Date(d.date)));
-        y.domain([0, d3.max(processedData, d => Math.max(d.funScore || 0, d.sleepScore || 0))]);
 
         // Create the SVG element
         const svg = d3.select(chartRef.current)
@@ -90,66 +100,82 @@ const PillarAssessmentChart = () => {
             .append('g')
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-
         // Add the axes
         svg.append('g')
             .attr('class', 'x axis')
             .attr('transform', `translate(0, ${height})`)
-            .call(d3.axisBottom(x));
+            .call(xAxis);
 
         svg.append('g')
             .attr('class', 'y axis')
-            .call(d3.axisLeft(y));
+            .call(yAxis);
 
-        // Add fun line
-        svg.append('path')
-            .datum(processedData)
-            .attr('class', 'line fun-line')
-            .attr('fill', 'none')
-            .attr('stroke', 'steelblue')
-            .attr('stroke-width', 1.5)
-            .attr('d', funLine);
+        // Add the lines
+        const addLine = (svg, processedData, lineClass, lineColor, lineFunction) => {
+            svg.append('path')
+                .datum(processedData)
+                .attr('class', `line ${lineClass}`)
+                .attr('fill', 'none')
+                .attr('stroke', lineColor)
+                .attr('stroke-width', 1.5)
+                .attr('d', lineFunction);
+        };
+        addLine(svg, processedData, 'fun-line', 'steelblue', funLine);
+        addLine(svg, processedData, 'sleep-line', 'red', sleepLine);
+        addLine(svg, processedData, 'exercise-line', 'green', exerciseLine);
 
-        // Add sleep line
-        svg.append('path')
-            .datum(processedData)
-            .attr('class', 'line sleep-line')
-            .attr('fill', 'none')
-            .attr('stroke', 'red')
-            .attr('stroke-width', 1.5)
-            .attr('d', sleepLine);
 
-        // Add a legend
+        // Define the Y axis scores and add horizontal lines
+        const yScores = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        const lineColors = {
+            0: { color: 'green', label: 'Low' },
+            20: { color: 'blue', label: 'Medium-low' },
+            35: { color: 'yellow', label: 'Medium' },
+            50: { color: 'orange', label: 'Medium-high' },
+            100: { color: 'red', label: 'High' },
+        };
+        yScores.forEach(score => {
+            const lineColor = lineColors[score] ?? { color: '#ccc', label: '' };
+            const line = svg.append('line')
+                .attr('x1', 0)
+                .attr('x2', width)
+                .attr('y1', y(score))
+                .attr('y2', y(score))
+                .attr('stroke', lineColor.color)
+                .attr('stroke-width', 1)
+                .attr('stroke-dasharray', '5,5');
+            if (lineColor.label) {
+                const label = svg.append('text')
+                    .attr('x', width + 10)
+                    .attr('y', y(score))
+                    .attr('dy', '0.35em')
+                    .text(lineColor.label)
+                    .attr('fill', lineColor.color);
+            }
+        });
+
+        // Add the legend
+        const addLegendItem = (legend, x, y, color, label) => {
+            legend.append('rect')
+                .attr('x', x)
+                .attr('y', y)
+                .attr('width', 10)
+                .attr('height', 10)
+                .style('fill', color);
+            legend.append('text')
+                .attr('x', x + 20)
+                .attr('y', y + 10)
+                .text(label)
+                .style('font-size', '12px');
+        };
         const legend = svg.append('g')
             .attr('class', 'legend')
-            .attr('transform', 'translate(' + (width - 100) + ',' + 20 + ')');
+            .attr('transform', `translate(${width - 100}, 20)`);
+        addLegendItem(legend, 0, 0, 'steelblue', 'Fun Score');
+        addLegendItem(legend, 0, 20, 'red', 'Sleep Score');
+        addLegendItem(legend, 0, 40, 'green', 'Exercise Score');
 
-        legend.append('rect')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', 10)
-            .attr('height', 10)
-            .style('fill', 'steelblue');
-
-        legend.append('text')
-            .attr('x', 20)
-            .attr('y', 10)
-            .text('Fun Score')
-            .style('font-size', '12px');
-
-        legend.append('rect')
-            .attr('x', 0)
-            .attr('y', 20)
-            .attr('width', 10)
-            .attr('height', 10)
-            .style('fill', 'red');
-
-        legend.append('text')
-            .attr('x', 20)
-            .attr('y', 30)
-            .text('Sleep Score')
-            .style('font-size', '12px');
-
+        // Format the date for the tooltip
         const formatDate = (date) => {
             return new Intl.DateTimeFormat('en-US', {
                 year: 'numeric',
@@ -160,9 +186,17 @@ const PillarAssessmentChart = () => {
             }).format(date);
         };
 
+        // Define mouseover, mousemove, and mouseout functions for data points
         const handlePointMouseOver = (d, assessmentType) => (event) => {
             const tooltip = d3.select('#tooltip');
-            const scoreText = assessmentType === 'fun' ? `Fun Score: ${d.funScore}` : `Sleep Score: ${d.sleepScore}`;
+            let scoreText;
+            if (assessmentType === 'fun') {
+                scoreText = `Fun Score: ${d.funScore}`;
+            } else if (assessmentType === 'sleep') {
+                scoreText = `Sleep Score: ${d.sleepScore}`;
+            } else if (assessmentType === 'exercise') {
+                scoreText = `Exercise Score: ${d.exerciseScore}`;
+            }
             tooltip
                 .style('display', 'inline')
                 .html(`Date: ${formatDate(d.date)}<br>${scoreText}`);
@@ -179,65 +213,27 @@ const PillarAssessmentChart = () => {
             d3.select('#tooltip').style('display', 'none');
         };
 
-        // Add fun data points
-        svg.selectAll('.fun-point')
-            .data(processedData.filter(d => d.funScore !== undefined))
-            .enter().append('circle')
-            .attr('class', 'fun-point')
-            .attr('cx', d => x(new Date(d.date)))
-            .attr('cy', d => y(d.funScore))
-            .attr('r', 5)
-            .style('fill', 'steelblue')
-            .on('mouseover', (event, d) => handlePointMouseOver(d, 'fun')(event))
-            .on('mousemove', handlePointMouseMove)
-            .on('mouseout', handlePointMouseOut);
-
-// Add sleep data points
-        svg.selectAll('.sleep-point')
-            .data(processedData.filter(d => d.sleepScore !== undefined))
-            .enter().append('circle')
-            .attr('class', 'sleep-point')
-            .attr('cx', d => x(new Date(d.date)))
-            .attr('cy', d => y(d.sleepScore))
-            .attr('r', 5)
-            .style('fill', 'red')
-            .on('mouseover', (event, d) => handlePointMouseOver(d, 'sleep')(event))
-            .on('mousemove', handlePointMouseMove)
-            .on('mouseout', handlePointMouseOut);
+        // Add the data points to the chart
+        const addDataPoints = (svg, processedData, scoreType, color) => {
+            svg.selectAll(`.${scoreType}-point`)
+                .data(processedData.filter(d => d[`${scoreType}Score`] !== undefined))
+                .enter().append('circle')
+                .attr('class', `${scoreType}-point`)
+                .attr('cx', d => x(new Date(d.date)))
+                .attr('cy', d => y(d[`${scoreType}Score`]))
+                .attr('r', 5)
+                .style('fill', color)
+                .on('mouseover', (event, d) => handlePointMouseOver(d, scoreType)(event))
+                .on('mousemove', handlePointMouseMove)
+                .on('mouseout', handlePointMouseOut);
+        };
+        addDataPoints(svg, processedData, 'fun', 'steelblue');
+        addDataPoints(svg, processedData, 'sleep', 'red');
+        addDataPoints(svg, processedData, 'exercise', 'green');
 
         animateChart();
 
     }, [state.chartData]);
-
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         if (!chartRef.current) return;
-    //
-    //         const svg = d3.select(chartRef.current).select('svg');
-    //
-    //         const funPath = svg.select('.fun-line');
-    //         const funPathLength = funPath.node()?.getTotalLength() || 0;
-    //         funPath
-    //             .attr('stroke-dasharray', `${funPathLength} ${funPathLength}`)
-    //             .attr('stroke-dashoffset', funPathLength)
-    //             .transition()
-    //             .duration(2000)
-    //             .ease(d3.easeLinear)
-    //             .attr('stroke-dashoffset', 0);
-    //
-    //         const sleepPath = svg.select('.sleep-line');
-    //         const sleepPathLength = sleepPath.node()?.getTotalLength() || 0;
-    //         sleepPath
-    //             .attr('stroke-dasharray', `${sleepPathLength} ${sleepPathLength}`)
-    //             .attr('stroke-dashoffset', sleepPathLength)
-    //             .transition()
-    //             .duration(2000)
-    //             .ease(d3.easeLinear)
-    //             .attr('stroke-dashoffset', 0);
-    //     }, 10);
-    //
-    //     return () => clearTimeout(timer);
-    // }, []);
 
     return (
         <div>
