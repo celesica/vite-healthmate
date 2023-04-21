@@ -26,6 +26,26 @@ const AssessmentForm = ({
         onSubmit: async (values) => {
             const testScore = Object.values(values).reduce((acc, value) => acc + parseInt(value, 10), 0);
             console.log('Total Score:', testScore);
+
+            // Calculate healthScore based on testScore and set value for each assessment
+            let healthScore = 0;
+
+            if (formName === "Fun Assessment") {
+                const funSet = 48;
+                healthScore = Math.round((testScore / funSet) * 100);
+            } else if (formName === "Sleep Assessment") {
+                const sleepSet = 51;
+                healthScore = Math.round((testScore / sleepSet) * 100);
+            } else if (formName === "Exercise Assessment") {
+                const exerciseSet = 21;
+                healthScore = Math.round((testScore / exerciseSet) * 100);
+            } else if (formName === "Environment Assessment") {
+                const environmentSet = 249;
+                healthScore = Math.round((testScore / environmentSet) * 100);
+            }
+
+            console.log('Health Score:', healthScore);
+
             const formStatus = progress === 100 ? 'Completed' : 'In Progress';
 
             const interpretationText = interpretScore(testScore);
@@ -52,7 +72,7 @@ const AssessmentForm = ({
                     interpretationText,
                     formProgress,
                     formQuestions,
-                    testScore,
+                    healthScore,
                     ...dataTypes
                 );
 
@@ -64,7 +84,7 @@ const AssessmentForm = ({
                 console.log('Form Progress:', formProgress);
                 console.log('Form Questions:', formQuestions);
                 console.log('Form Answers:', formAnswers);
-                console.log('Form Score:', testScore);
+                console.log('Form Score:', healthScore);
             } else {
                 setIsSaved(true);
             }

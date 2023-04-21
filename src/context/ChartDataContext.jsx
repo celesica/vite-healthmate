@@ -10,9 +10,10 @@ const initialState = {
         funAssessments: [],
         sleepAssessments: [],
         pillarAssessments: [],
-        environmentAssessments: [],
         exerciseAssessments: [],
+        environmentAssessments: [],
     },
+    loading: true,
 };
 
 const reducer = (state, action) => {
@@ -26,7 +27,9 @@ const reducer = (state, action) => {
         case 'SET_EXERCISE_ASSESSMENTS':
             return { ...state, chartData: { ...state.chartData, exerciseAssessments: action.payload }};
         case 'SET_ENVIRONMENT_ASSESSMENTS':
-            return { ...state, chartData: { ...state.chartData, exerciseAssessments: action.payload }};
+            return { ...state, chartData: { ...state.chartData, environmentAssessments: action.payload }};
+        case 'SET_LOADING':
+            return { ...state, loading: action.payload };
         default:
             return state;
     }
@@ -43,7 +46,6 @@ export const ChartDataProvider = ({ children }) => {
             orderedPillarAssessments,
             (snapshot) => {
                 const pillarAssessments = snapshot.docs.map((doc) => doc.data());
-                console.log('Fetched pillarAssessments:', pillarAssessments);
                 dispatch({type: 'SET_PILLAR_ASSESSMENTS', payload: pillarAssessments});
             },
             (error) => {
@@ -59,7 +61,6 @@ export const ChartDataProvider = ({ children }) => {
             orderedFunAssessments,
             (snapshot) => {
                 const funAssessments = snapshot.docs.map((doc) => doc.data());
-                console.log('Fetched funAssessments:', funAssessments);
                 dispatch({type: 'SET_FUN_ASSESSMENTS', payload: funAssessments});
             },
             (error) => {
@@ -75,7 +76,6 @@ export const ChartDataProvider = ({ children }) => {
             orderedSleepAssessments,
             (snapshot) => {
                 const sleepAssessments = snapshot.docs.map((doc) => doc.data());
-                console.log('Fetched sleepAssessments:', sleepAssessments);
                 dispatch({type: 'SET_SLEEP_ASSESSMENTS', payload: sleepAssessments});
             },
             (error) => {
@@ -111,7 +111,7 @@ export const ChartDataProvider = ({ children }) => {
                 dispatch({type: 'SET_ENVIRONMENT_ASSESSMENTS', payload: environmentAssessments});
             },
             (error) => {
-                console.error('Error fetching environment assessments:', error);
+                console.error('Error fetching exercise assessments:', error);
             }
         );
     };
@@ -122,6 +122,17 @@ export const ChartDataProvider = ({ children }) => {
         const unsubscribeSleep = fetchSleepAssessments();
         const unsubscribeExercise = fetchExerciseAssessments();
         const unsubscribeEnvironment = fetchEnvironmentAssessments();
+
+        // Set loading to false once all data is fetched
+        Promise.all([
+            unsubscribePillar,
+            unsubscribeFun,
+            unsubscribeSleep,
+            unsubscribeExercise,
+            unsubscribeEnvironment,
+        ]).then(() => {
+            dispatch({ type: 'SET_LOADING', payload: false });
+        });
 
         return () => {
             if (unsubscribePillar) unsubscribePillar();

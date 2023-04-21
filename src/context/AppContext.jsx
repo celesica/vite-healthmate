@@ -56,6 +56,59 @@ const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
     }
 };
 
+const updatePillarAssessments = (mainDocSnapshot, formName, healthScore) => {
+    return {
+        recentSubmission: formName,
+        funScore: formName === 'Fun Assessment' ? healthScore : mainDocSnapshot.data().funScore,
+        sleepScore: formName === 'Sleep Assessment' ? healthScore : mainDocSnapshot.data().sleepScore,
+        exerciseScore: formName === 'Exercise Assessment' ? healthScore : mainDocSnapshot.data().exerciseScore,
+        environmentScore: formName === 'Environment Assessment' ? healthScore : mainDocSnapshot.data().environmentScore,
+        totalScore: (formName === 'Fun Assessment' ? healthScore : mainDocSnapshot.data().funScore) +
+            (formName === 'Sleep Assessment' ? healthScore : mainDocSnapshot.data().sleepScore) +
+            (formName === 'Exercise Assessment' ? healthScore : mainDocSnapshot.data().exerciseScore) +
+            (formName === 'Environment Assessment' ? healthScore : mainDocSnapshot.data().environmentScore),
+    };
+};
+
+// const updateBodyAssessments = (mainDocSnapshot, formName, healthScore) => {
+//     return {
+//         recentSubmission: formName,
+//         digestionLowScore: formName === 'Digestion: Low Stomach Assessment' ? healthScore : mainDocSnapshot.data().digestionLowScore,
+//         digestionExcessScore: formName === 'Digestion: Excess Stomach Assessment' ? healthScore : mainDocSnapshot.data().digestionExcessScore,
+//     };
+// };
+
+const mainDocUpdate = async (mainDocSnapshot, formName, healthScore, userID, mainCollectionName, subCollectionName) => {
+    const baseUpdate = {
+        userID,
+        lastModified: new Date(),
+    };
+
+    let collectionSpecificUpdate = {};
+
+    if (mainCollectionName === 'pillarAssessments') {
+        collectionSpecificUpdate = updatePillarAssessments(mainDocSnapshot, formName, healthScore);
+    } else if (mainCollectionName === 'bodyAssessments') {
+        collectionSpecificUpdate = updateBodyAssessments(mainDocSnapshot, formName, healthScore);
+    }
+
+    const subAssessmentsRef = collection(db, subCollectionName);
+    const q = query(subAssessmentsRef, where('userID', '==', userID), where('formName', '==', formName));
+    const querySnapshot = await getDocs(q);
+
+    const alreadySubmitted = querySnapshot.size > 0;
+
+    const assessmentsCompletedUpdate = {
+        assessmentsCompleted: alreadySubmitted ? mainDocSnapshot.data().assessmentsCompleted : mainDocSnapshot.data().assessmentsCompleted + 1,
+    };
+
+    return {
+        ...baseUpdate,
+        ...assessmentsCompletedUpdate,
+        ...collectionSpecificUpdate,
+    };
+};
+
 const saveFormSubmission = async (
     userID,
     formName,
@@ -64,7 +117,7 @@ const saveFormSubmission = async (
     interpretation,
     progress,
     formQuestions,
-    testScore,
+    healthScore,
     mainCollectionName,
     mainDocIdPrefix,
     subCollectionName,
@@ -83,22 +136,9 @@ const saveFormSubmission = async (
             recentTestScore = docSnapshot.data().formScore;
         });
 
-        const mainDocUpdate = {
-            userID,
-            assessmentsCompleted: mainDocSnapshot.data().assessmentsCompleted + 1,
-            lastModified: new Date(),
-            recentSubmission: formName,
-            funScore: formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore,
-            sleepScore: formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore,
-            exerciseScore: formName === 'Exercise Assessment' ? testScore : mainDocSnapshot.data().exerciseScore,
-            environmentScore: formName === 'Environment Assessment' ? testScore : mainDocSnapshot.data().environmentScore,
-            totalScore: (formName === 'Fun Assessment' ? testScore : mainDocSnapshot.data().funScore) +
-                (formName === 'Sleep Assessment' ? testScore : mainDocSnapshot.data().sleepScore) +
-                (formName === 'Exercise Assessment' ? testScore : mainDocSnapshot.data().exerciseScore) +
-                (formName === 'Environment Assessment' ? testScore : mainDocSnapshot.data().environmentScore),
-        };
+        const mainDocUpdateData = await mainDocUpdate(mainDocSnapshot, formName, healthScore, userID, mainCollectionName, subCollectionName);
 
-        await updateDoc(mainDocRef, mainDocUpdate);
+        await updateDoc(mainDocRef, mainDocUpdateData);
 
         // Determine the next available number
         let nextNumber = 1;
@@ -125,7 +165,7 @@ const saveFormSubmission = async (
             formProgress: progress,
             formQuestions,
             formAnswers: formValues,
-            formScore: testScore,
+            formScore: healthScore,
         };
 
         // Use setDoc to create a new document with the specified name
