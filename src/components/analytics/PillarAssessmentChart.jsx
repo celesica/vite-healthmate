@@ -28,7 +28,10 @@ const PillarAssessmentChart = () => {
             .duration(2000)
             .ease(d3.easeLinear)
             .attr('stroke-dashoffset', 0);
+
     };
+
+    console.log(state.chartData);
 
     useEffect(() => {
         if (!chartRef.current || !state.chartData.funAssessments.length || !state.chartData.sleepAssessments.length) return;
