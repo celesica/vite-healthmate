@@ -9,7 +9,7 @@ const PillarAssessmentChart = () => {
 
     const animateChart = () => {
         const svg = d3.select(chartRef.current).select('svg');
-        const lines = ['fun-line', 'sleep-line', 'exercise-line'];
+        const lines = ['fun-line', 'sleep-line', 'exercise-line', 'environment-line'];
 
         lines.forEach(lineClass => {
             const linePath = svg.select(`.${lineClass}`);
@@ -31,7 +31,8 @@ const PillarAssessmentChart = () => {
         if (!chartRef.current ||
             !state.chartData.funAssessments.length ||
             !state.chartData.sleepAssessments.length ||
-            !state.chartData.exerciseAssessments.length) return;
+            !state.chartData.exerciseAssessments.length ||
+            !state.chartData.environmentAssessments.length) return;
 
         // Clear the chart before rendering
         d3.select(chartRef.current).selectAll('*').remove();
@@ -40,25 +41,24 @@ const PillarAssessmentChart = () => {
         const combinedData = [
             ...state.chartData.funAssessments,
             ...state.chartData.sleepAssessments,
-            ...state.chartData.exerciseAssessments
+            ...state.chartData.exerciseAssessments,
+            ...state.chartData.environmentAssessments
         ].sort((a, b) => new Date(a.submissionDate) - new Date(b.submissionDate),);
 
         // Process data, create an array of objects containing date and scores
+        const scoreTypes = {
+            'Fun Assessment': 'funScore',
+            'Sleep Assessment': 'sleepScore',
+            'Exercise Assessment': 'exerciseScore',
+            'Environment Assessment': 'environmentScore',
+        };
+
         const processedData = combinedData.map((data) => {
-            const isFun =
-                data.formType === 'pillarAssessments' &&
-                data.formName === "Fun Assessment";
-            const isSleep =
-                data.formType === 'pillarAssessments' &&
-                data.formName === "Sleep Assessment";
-            const isExercise =
-                data.formType === 'pillarAssessments' &&
-                data.formName === "Exercise Assessment";
+            const scoreType = scoreTypes[data.formName];
+            const score = data.formType === 'pillarAssessments' ? data.formScore : undefined;
             return {
                 date: data.submissionDate.toDate(),
-                funScore: isFun ? data.formScore : undefined,
-                sleepScore: isSleep ? data.formScore : undefined,
-                exerciseScore: isExercise ? data.formScore : undefined,
+                [scoreType]: score,
             };
         });
 
@@ -90,6 +90,7 @@ const PillarAssessmentChart = () => {
         const funLine = createLineGenerator('funScore');
         const sleepLine = createLineGenerator('sleepScore');
         const exerciseLine = createLineGenerator('exerciseScore');
+        const environmentLine = createLineGenerator('environmentScore');
 
 
         // Create the SVG element
@@ -122,7 +123,8 @@ const PillarAssessmentChart = () => {
         };
         addLine(svg, processedData, 'fun-line', 'steelblue', funLine);
         addLine(svg, processedData, 'sleep-line', 'red', sleepLine);
-        addLine(svg, processedData, 'exercise-line', 'green', exerciseLine);
+        addLine(svg, processedData, 'exercise-line', 'limeGreen', exerciseLine);
+        addLine(svg, processedData, 'environment-line', 'purple', environmentLine);
 
 
         // Define the Y axis scores and add horizontal lines
@@ -173,7 +175,8 @@ const PillarAssessmentChart = () => {
             .attr('transform', `translate(${width - 100}, 20)`);
         addLegendItem(legend, 0, 0, 'steelblue', 'Fun Score');
         addLegendItem(legend, 0, 20, 'red', 'Sleep Score');
-        addLegendItem(legend, 0, 40, 'green', 'Exercise Score');
+        addLegendItem(legend, 0, 40, 'limeGreen', 'Exercise Score');
+        addLegendItem(legend, 0, 60, 'purple', 'Environment Score');
 
         // Format the date for the tooltip
         const formatDate = (date) => {
@@ -187,16 +190,16 @@ const PillarAssessmentChart = () => {
         };
 
         // Define mouseover, mousemove, and mouseout functions for data points
+        const scoreTexts = {
+            fun: d => `Fun Score: ${d.funScore}`,
+            sleep: d => `Sleep Score: ${d.sleepScore}`,
+            exercise: d => `Exercise Score: ${d.exerciseScore}`,
+            environment: d => `Environment Score: ${d.environmentScore}`,
+        };
+
         const handlePointMouseOver = (d, assessmentType) => (event) => {
             const tooltip = d3.select('#tooltip');
-            let scoreText;
-            if (assessmentType === 'fun') {
-                scoreText = `Fun Score: ${d.funScore}`;
-            } else if (assessmentType === 'sleep') {
-                scoreText = `Sleep Score: ${d.sleepScore}`;
-            } else if (assessmentType === 'exercise') {
-                scoreText = `Exercise Score: ${d.exerciseScore}`;
-            }
+            const scoreText = scoreTexts[assessmentType](d);
             tooltip
                 .style('display', 'inline')
                 .html(`Date: ${formatDate(d.date)}<br>${scoreText}`);
@@ -229,7 +232,8 @@ const PillarAssessmentChart = () => {
         };
         addDataPoints(svg, processedData, 'fun', 'steelblue');
         addDataPoints(svg, processedData, 'sleep', 'red');
-        addDataPoints(svg, processedData, 'exercise', 'green');
+        addDataPoints(svg, processedData, 'exercise', 'limeGreen');
+        addDataPoints(svg, processedData, 'environment', 'purple');
 
         animateChart();
 
