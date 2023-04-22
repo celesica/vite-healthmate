@@ -1,8 +1,9 @@
 import React from 'react';
 import Sidenav from '../components/dashboard/Sidenav.jsx';
-import PillarAssessmentChartD3 from '../components/analytics/PillarAssessmentChart-D3.jsx';
-import PillarAssessmentChart from '../components/analytics/PillarAssessmentChart.jsx';
+import PillarAssessmentChart from '../components/analytics/Charts/PillarAssessmentChart.jsx';
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
+import AssessmentCard from "../components/analytics/AssessmentCard.jsx";
+import FunScoreChart from "../components/analytics/Charts/FunScoreChart.jsx";
 
 const DashboardPage = () => {
     return (
@@ -12,11 +13,30 @@ const DashboardPage = () => {
             </div>
             <div className="main w-4/5 ml-auto py-4 px-8">
                 <DashboardHeader />
-                <div className="bg-white rounded-lg shadow-xl overflow-hidden p-4">
-                    <h2 className="text-lg font-medium mb-2">Pillar Assessment Chart</h2>
-                    <div className="p-4">
-                        <PillarAssessmentChart />
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="border-ownTeal border-2 w-full md:col-span-3 bg-white rounded-lg shadow-xl overflow-hidden p-4 flex flex-col h-full">
+                        <h2 className="text-lg font-medium mb-2">Pillar Assessment Chart</h2>
+                        <div className="p-4 flex-grow relative">
+                            <PillarAssessmentChart />
+                        </div>
                     </div>
+                    <div className="w-full md:col-span-1 flex flex-col gap-4">
+                        <div className="flex-grow">
+                            <AssessmentCard assessmentName="Fun"/>
+                        </div>
+                        <div className="flex-grow">
+                            <AssessmentCard assessmentName="Sleep"/>
+                        </div>
+                        <div className="flex-grow">
+                            <AssessmentCard assessmentName="Exercise"/>
+                        </div>
+                        <div className="flex-grow">
+                            <AssessmentCard assessmentName="Environment"/>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <FunScoreChart />
                 </div>
 
             </div>

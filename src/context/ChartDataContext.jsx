@@ -1,7 +1,8 @@
 import React, {createContext, useContext, useEffect, useReducer} from 'react';
-import {collection, onSnapshot, orderBy, query} from 'firebase/firestore';
+import {collection, onSnapshot, orderBy, where, query} from 'firebase/firestore';
 import {useAuth} from './AuthContext';
 import {db} from '../config/firebase';
+import LoadingState from '../components/dashboard/LoadingState';
 
 const ChartDataContext = createContext();
 
@@ -14,6 +15,7 @@ const initialState = {
         environmentAssessments: [],
     },
     loading: true,
+    hasChartData: false,
 };
 
 const reducer = (state, action) => {
@@ -30,6 +32,8 @@ const reducer = (state, action) => {
             return { ...state, chartData: { ...state.chartData, environmentAssessments: action.payload }};
         case 'SET_LOADING':
             return { ...state, loading: action.payload };
+        case 'SET_HAS_CHART_DATA':
+            return { ...state, hasChartData: action.payload };
         default:
             return state;
     }
@@ -39,113 +43,66 @@ export const ChartDataProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { currentUser } = useAuth();
 
-    const fetchPillarAssessments = () => {
-        const pillarAssessmentsRef = collection(db, 'pillarAssessments');
-        const orderedPillarAssessments = query(pillarAssessmentsRef, orderBy('submissionDate'));
+    const fetchAssessments = (collectionName, actionType) => (resolve) => {
+        const ref = collection(db, collectionName);
+        const orderedQuery = query(ref, orderBy('submissionDate'), where('userID', '==', currentUser.uid));
+
         return onSnapshot(
-            orderedPillarAssessments,
+            orderedQuery,
             (snapshot) => {
-                const pillarAssessments = snapshot.docs.map((doc) => doc.data());
-                dispatch({type: 'SET_PILLAR_ASSESSMENTS', payload: pillarAssessments});
+                const assessments = snapshot.docs.map((doc) => doc.data());
+                dispatch({ type: actionType, payload: assessments });
+                resolve();
             },
             (error) => {
-                console.error('Error fetching pillar assessments:', error);
+                console.error(`Error fetching ${collectionName}:`, error);
             }
         );
     };
 
-    const fetchFunAssessments = () => {
-        const funAssessmentsRef = collection(db, 'funAssessments');
-        const orderedFunAssessments = query(funAssessmentsRef, orderBy('submissionDate'));
-        return onSnapshot(
-            orderedFunAssessments,
-            (snapshot) => {
-                const funAssessments = snapshot.docs.map((doc) => doc.data());
-                dispatch({type: 'SET_FUN_ASSESSMENTS', payload: funAssessments});
-            },
-            (error) => {
-                console.error('Error fetching fun assessments:', error);
-            }
-        );
-    };
-
-    const fetchSleepAssessments = () => {
-        const sleepAssessmentsRef = collection(db, 'sleepAssessments');
-        const orderedSleepAssessments = query(sleepAssessmentsRef, orderBy('submissionDate'));
-        return onSnapshot(
-            orderedSleepAssessments,
-            (snapshot) => {
-                const sleepAssessments = snapshot.docs.map((doc) => doc.data());
-                dispatch({type: 'SET_SLEEP_ASSESSMENTS', payload: sleepAssessments});
-            },
-            (error) => {
-                console.error('Error fetching sleep assessments:', error);
-            }
-        );
-    };
-
-    const fetchExerciseAssessments = () => {
-        const exerciseAssessmentsRef = collection(db, 'exerciseAssessments');
-        const orderedExerciseAssessments = query(exerciseAssessmentsRef, orderBy('submissionDate'));
-        return onSnapshot(
-            orderedExerciseAssessments,
-            (snapshot) => {
-                const exerciseAssessments = snapshot.docs.map((doc) => doc.data());
-                console.log('Fetched exerciseAssessments:', exerciseAssessments);
-                dispatch({type: 'SET_EXERCISE_ASSESSMENTS', payload: exerciseAssessments});
-            },
-            (error) => {
-                console.error('Error fetching exercise assessments:', error);
-            }
-        );
-    };
-
-    const fetchEnvironmentAssessments = () => {
-        const environmentAssessmentsRef = collection(db, 'environmentAssessments');
-        const orderedEnvironmentAssessments = query(environmentAssessmentsRef, orderBy('submissionDate'));
-        return onSnapshot(
-            orderedEnvironmentAssessments,
-            (snapshot) => {
-                const environmentAssessments = snapshot.docs.map((doc) => doc.data());
-                console.log('Fetched environmentAssessments:', environmentAssessments);
-                dispatch({type: 'SET_ENVIRONMENT_ASSESSMENTS', payload: environmentAssessments});
-            },
-            (error) => {
-                console.error('Error fetching exercise assessments:', error);
-            }
-        );
+    const updateHasChartData = () => {
+        const hasChartData =
+            state.chartData.pillarAssessments.length > 0 ||
+            state.chartData.funAssessments.length > 0 ||
+            state.chartData.sleepAssessments.length > 0 ||
+            state.chartData.exerciseAssessments.length > 0 ||
+            state.chartData.environmentAssessments.length > 0;
+        dispatch({ type: 'SET_HAS_CHART_DATA', payload: hasChartData });
     };
 
     useEffect(() => {
-        const unsubscribePillar = fetchPillarAssessments();
-        const unsubscribeFun = fetchFunAssessments();
-        const unsubscribeSleep = fetchSleepAssessments();
-        const unsubscribeExercise = fetchExerciseAssessments();
-        const unsubscribeEnvironment = fetchEnvironmentAssessments();
+        updateHasChartData();
+    }, [state.chartData]);
+
+    useEffect(() => {
+        const assessmentTypes = [
+            { collection: 'pillarAssessments', action: 'SET_PILLAR_ASSESSMENTS' },
+            { collection: 'funAssessments', action: 'SET_FUN_ASSESSMENTS' },
+            { collection: 'sleepAssessments', action: 'SET_SLEEP_ASSESSMENTS' },
+            { collection: 'exerciseAssessments', action: 'SET_EXERCISE_ASSESSMENTS' },
+            { collection: 'environmentAssessments', action: 'SET_ENVIRONMENT_ASSESSMENTS' },
+        ];
+
+        const promises = assessmentTypes.map(({ collection, action }) => {
+            return new Promise((resolve) => {
+                const unsubscribe = fetchAssessments(collection, action)(resolve);
+                return () => unsubscribe && unsubscribe();
+            });
+        });
 
         // Set loading to false once all data is fetched
-        Promise.all([
-            unsubscribePillar,
-            unsubscribeFun,
-            unsubscribeSleep,
-            unsubscribeExercise,
-            unsubscribeEnvironment,
-        ]).then(() => {
+        Promise.all(promises).then(() => {
             dispatch({ type: 'SET_LOADING', payload: false });
         });
 
         return () => {
-            if (unsubscribePillar) unsubscribePillar();
-            if (unsubscribeFun) unsubscribeFun();
-            if (unsubscribeSleep) unsubscribeSleep();
-            if (unsubscribeExercise) unsubscribeExercise();
-            if (unsubscribeEnvironment) unsubscribeEnvironment();
+            promises.forEach(promise => promise.catch(() => {}));
         };
     }, [currentUser]);
 
     return (
-        <ChartDataContext.Provider value={{ state, dispatch }}>
-            {children}
+        <ChartDataContext.Provider value={{ state, dispatch, loading: state.loading, hasChartData: state.hasChartData }}>
+            {state.loading ? <LoadingState /> : children}
         </ChartDataContext.Provider>
     );
 };

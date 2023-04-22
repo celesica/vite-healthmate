@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
-import LoadingScreen from './LoadingScreen';
 import { RiDashboardFill } from 'react-icons/ri';
 import { MdAssessment } from 'react-icons/md';
 import { IoMdAnalytics } from 'react-icons/io';
@@ -8,10 +7,6 @@ import { GoFileSubmodule } from 'react-icons/go';
 
 const Sidenav = () => {
     const { userData } = useAuth();
-
-    if (!userData) {
-        return <LoadingScreen />;
-    }
 
     return (
         <nav className="flex flex-col justify-between p-4 text-white">

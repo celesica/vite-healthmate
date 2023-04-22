@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useAuth } from '../../context/AuthContext';
 import { useAppContext } from '../../context/AppContext';
+import AssessmentButton from './AssessmentButton';
 
 const AssessmentForm = ({
     formName,
@@ -109,12 +110,12 @@ const AssessmentForm = ({
 
     return (
         <>
-            <button
+            <AssessmentButton
                 onClick={() => createMainAssessment(currentUser.uid, ...dataTypes)}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
                 Start Assessment
-            </button>
+            </AssessmentButton>
             {!submitted ? (
                 <form onSubmit={formik.handleSubmit}>
                     <h1 className="text-2xl font-bold">{userData.displayName}</h1>

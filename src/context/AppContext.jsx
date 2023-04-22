@@ -15,6 +15,7 @@ const initialState = {
     displayName: "",
     initials: "",
     randomColor: "",
+    isModalOpen: false,
 };
 
 const reducer = (state, action) => {
@@ -29,6 +30,8 @@ const reducer = (state, action) => {
             return { ...state, initials: action.payload };
         case 'SET_RANDOM_COLOR':
             return { ...state, randomColor: action.payload };
+        case 'TOGGLE_MODAL':
+            return { ...state, isModalOpen: !state.isModalOpen };
         default:
             return state;
     }

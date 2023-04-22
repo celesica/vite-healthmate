@@ -1,20 +1,19 @@
 import React, {useEffect, useRef} from 'react';
 import Chart from 'chart.js/auto';
-import {useChartDataContext} from '../../context/ChartDataContext';
+import {useChartDataContext} from '../../../context/ChartDataContext.jsx';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import LoadingScreen from '../dashboard/LoadingScreen';
 import moment from 'moment';
 import 'chartjs-adapter-moment';
-
+import LoadingState from '../../../components/dashboard/LoadingState';
+import NoData from '../../analytics/Charts/NoData';
 
 Chart.register(annotationPlugin, zoomPlugin);
 
 const PillarAssessmentChart = () => {
-    const { state } = useChartDataContext();
+    const { state, hasChartData } = useChartDataContext();
     const chartCanvasRef = useRef(null);
     const chartInstanceRef = useRef(null);
-
 
     const getSubmissionDates = (assessments) => {
         return assessments.map((assessment) => {
@@ -37,7 +36,7 @@ const PillarAssessmentChart = () => {
         window.addEventListener('resize', resizeHandler);
 
         const pillarAssessmentChartCanvas = chartCanvasRef.current;
-        console.log(state);
+        // console.log(state);
         try {
             const allSubmissionDates = [
                 ...getSubmissionDates(state.chartData.funAssessments),
@@ -210,16 +209,17 @@ const PillarAssessmentChart = () => {
         }
     }, [state]);
 
-    const hasChartData = state.chartData.funAssessments.length > 0 ||
-        state.chartData.sleepAssessments.length > 0 ||
-        state.chartData.exerciseAssessments.length > 0 ||
-        state.chartData.environmentAssessments.length > 0;
+    console.log(state.chartData.funAssessments);
 
-    return state.loading || !hasChartData ? (
-        <LoadingScreen />
-    ) : (
+    return (
         <div>
-            <canvas ref={chartCanvasRef}></canvas>
+            {state.loading ? (
+                <LoadingState />
+            ) : !hasChartData ? (
+                    <NoData onButtonClick={() => console.log('Take the test now clicked!')} />
+            ) : (
+                <canvas ref={chartCanvasRef}></canvas>
+            )}
         </div>
     );
 
