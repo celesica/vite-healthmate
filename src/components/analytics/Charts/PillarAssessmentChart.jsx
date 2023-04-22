@@ -36,7 +36,6 @@ const PillarAssessmentChart = () => {
         window.addEventListener('resize', resizeHandler);
 
         const pillarAssessmentChartCanvas = chartCanvasRef.current;
-        // console.log(state);
         try {
             const allSubmissionDates = [
                 ...getSubmissionDates(state.chartData.funAssessments),
@@ -111,7 +110,8 @@ const PillarAssessmentChart = () => {
                                     scaleID: 'y',
                                     value: 0,
                                     borderColor: 'green',
-                                    borderWidth: 2,
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
                                     label: {
                                         backgroundColor: 'green',
                                         content: 'Overall good balance',
@@ -125,7 +125,8 @@ const PillarAssessmentChart = () => {
                                     scaleID: 'y',
                                     value: 20,
                                     borderColor: '#3d85c6',
-                                    borderWidth: 2,
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
                                     label: {
                                         backgroundColor: '#3d85c6',
                                         content: 'Needs tune up',
@@ -139,7 +140,8 @@ const PillarAssessmentChart = () => {
                                     scaleID: 'y',
                                     value: 35,
                                     borderColor: '#ffd966',
-                                    borderWidth: 2,
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
                                     label: {
                                         backgroundColor: '#ffd966',
                                         content: 'Out of balance',
@@ -153,7 +155,8 @@ const PillarAssessmentChart = () => {
                                     scaleID: 'y',
                                     value: 50,
                                     borderColor: '#e69138',
-                                    borderWidth: 2,
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
                                     label: {
                                         backgroundColor: '#e69138',
                                         content: 'Very compromised',
@@ -167,7 +170,8 @@ const PillarAssessmentChart = () => {
                                     scaleID: 'y',
                                     value: 80,
                                     borderColor: '#cc0000',
-                                    borderWidth: 2,
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
                                     label: {
                                         backgroundColor: '#cc0000',
                                         content: 'Severely compromised',
@@ -209,13 +213,9 @@ const PillarAssessmentChart = () => {
         }
     }, [state]);
 
-    console.log(state.chartData.funAssessments);
-
     return (
         <div>
-            {state.loading ? (
-                <LoadingState />
-            ) : !hasChartData ? (
+            {!hasChartData ? (
                     <NoData onButtonClick={() => console.log('Take the test now clicked!')} />
             ) : (
                 <canvas ref={chartCanvasRef}></canvas>

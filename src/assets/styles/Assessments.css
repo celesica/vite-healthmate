@@ -1,0 +1,20 @@
+/* Customize scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Adjust scrollbar width */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #dbf1ee; /* Adjust track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #64C0AB; /* Adjust thumb color to teal */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #FFAB5D; /* Adjust thumb color on hover */
+}
+
+.form-radio {
+    --tw-ring-color: #64C0AB !important;
+}

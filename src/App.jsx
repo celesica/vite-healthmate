@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from "react";
-import Routes from './routes/routes.jsx';
+import Routes from './routes/Routes.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { AppProvider } from './context/AppContext.jsx';
+import { ChartDataProvider } from './context/ChartDataContext.jsx';
 import './App.css';
 import 'typeface-inter';
 import "flowbite";
@@ -24,12 +25,11 @@ function App() {
 
     return (
         <div className="App">
-            {/*<button className="bg-ownOrange p-4 rounded-3xl" onClick={handleThemeChange}>*/}
-            {/*    Dark Mode*/}
-            {/*</button>*/}
             <AuthProvider>
                 <AppProvider>
-                    <Routes />
+                    <ChartDataProvider>
+                        <Routes />
+                    </ChartDataProvider>
                 </AppProvider>
             </AuthProvider>
         </div>

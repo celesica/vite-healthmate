@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useChartDataContext } from '../../context/ChartDataContext.jsx';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-// import FunScoreChart from "./Charts/FunScoreChart.jsx";
 import AssessmentScoreChart from "./Charts/AssessmentScoreChart.jsx";
 
 const getBgColor = (formScore) => {
@@ -64,27 +64,40 @@ const AssessmentCard = ({ assessmentName }) => {
     const CardFront = () => {
         return (
             <div>
-                <h2 className="text-3xl font-bold mb-4 text-ownOrange">{assessmentName} Assessment</h2>
-                <p className="mb-4">
-                    Last taken on {' '}
-                    {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(latestAssessment?.submissionDate.toDate())}
-                </p>
-                <p
-                    className="text-lg m-4 p-4 border-gray-300 border-2 rounded-3xl"
-                    style={{
-                        backgroundColor: bgColor,
-                        filter: "brightness(90%)",
-                    }}
-                >
-                    {latestAssessment?.interpretation}
-                </p>
-                <div className="flex justify-center mt-6 mx-12 mb-6">
-                    <button className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4">
-                        Retake Assessment
+                <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <div className="flex flex-col">
+                        <h2 className="text-3xl font-bold mb-2 text-ownOrange">{assessmentName} Assessment</h2>
+                        <p className="text-lg text-gray-500 mb-4">
+                            Last taken on {' '}
+                            {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(latestAssessment?.submissionDate.toDate())}
+                        </p>
+                    </div>
+                    <button type="button"
+                            className="text-gray-400 bg-transparent hover:bg-lightTeal hover:text-darkTeal rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="defaultModal"
+                            onClick={handleModalClose}>
+                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"></path>
+                        </svg>
                     </button>
-                    <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
-                        Check Your Trend
-                    </button>
+                </div>
+                <div className="p-6 space-y-6">
+                    <p className="text-lg m-4 p-4 border-gray-300 border-2 rounded-3xl" style={{backgroundColor: bgColor}}>
+                        {latestAssessment?.interpretation}
+                    </p>
+                </div>
+                <div className="space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <div className="flex justify-center mt-6 mx-12 mb-6">
+                        <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4" to={`/assessments?assessmentType=${assessmentName.toLowerCase()}`}>
+                            <button >Retake Assessment</button>
+                        </Link>
+                        <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
+                            Check Your Trend
+                        </button>
+                    </div>
                 </div>
             </div>
         )
@@ -92,20 +105,41 @@ const AssessmentCard = ({ assessmentName }) => {
 
     const CardBack = () => {
         return (
-            <div className="max-h-[640px]">
-                <h2 className="text-3xl font-bold mb-4 text-ownOrange">Trend Analysis</h2>
-                <div>
+            <div>
+                <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <div className="flex flex-col text-left">
+                        <h2 className="text-3xl font-bold mb-2 text-ownOrange">{assessmentName} Assessment</h2>
+                        <p className="text-lg text-gray-500 mb-4">
+                            As of {' '}
+                            {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(latestAssessment?.submissionDate.toDate())}
+                        </p>
+                    </div>
+                    <button type="button"
+                            className="text-gray-400 bg-transparent hover:bg-lightTeal hover:text-darkTeal rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="defaultModal"
+                            onClick={handleModalClose}>
+                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div className="p-6 space-y-6">
                     <div>
                         <AssessmentScoreChart assessmentName={assessmentName} />
                     </div>
                 </div>
-                <div className="flex justify-center mt-6 mx-12 mb-6">
-                    <button className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4">
-                        Retake Assessment
-                    </button>
-                    <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
-                        Flip Back
-                    </button>
+                <div className="space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <div className="flex justify-center mt-6 mx-12 mb-6">
+                        <button className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4">
+                            Retake Assessment
+                        </button>
+                        <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
+                            Flip Back
+                        </button>
+                    </div>
                 </div>
             </div>
         )
@@ -145,21 +179,21 @@ const AssessmentCard = ({ assessmentName }) => {
             {showModal && (
                 <>
                     <div className="fixed top-0 left-0 w-screen h-screen bg-gray-700 opacity-50 z-10"></div>
-                    <div className="flex flex-col justify-center text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg z-20 " style={{ width: '40rem', height: '500px'}}>
-                        <div className="flex justify-end">
-                            <button
-                                className="text-gray-600 hover:text-gray-800"
-                                onClick={handleModalClose}
-                            >
-                                <svg
-                                    className="h-6 w-6 fill-current"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path d="M18.3 5.71a1 1 0 0 0-1.42 0L12 10.59l-4.88-4.88a1 1 0 0 0-1.42 1.42L10.59 12l-4.88 4.88a1 1 0 0 0 1.42 1.42L12 13.41l4.88 4.88a1 1 0 0 0 1.42-1.42L13.41 12l4.88-4.88a1 1 0 0 0 0-1.41z" />
-                                </svg>
-                            </button>
-                        </div>
+                    <div className="flex flex-col justify-center text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg z-20 " style={{ width: '40rem', }}>
+                        {/*<div className="flex justify-end">*/}
+                        {/*    <button*/}
+                        {/*        className="text-gray-600 hover:text-gray-800"*/}
+                        {/*        onClick={handleModalClose}*/}
+                        {/*    >*/}
+                        {/*        <svg*/}
+                        {/*            className="h-6 w-6 fill-current"*/}
+                        {/*            xmlns="http://www.w3.org/2000/svg"*/}
+                        {/*            viewBox="0 0 24 24"*/}
+                        {/*        >*/}
+                        {/*            <path d="M18.3 5.71a1 1 0 0 0-1.42 0L12 10.59l-4.88-4.88a1 1 0 0 0-1.42 1.42L10.59 12l-4.88 4.88a1 1 0 0 0 1.42 1.42L12 13.41l4.88 4.88a1 1 0 0 0 1.42-1.42L13.41 12l4.88-4.88a1 1 0 0 0 0-1.41z" />*/}
+                        {/*        </svg>*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
                             {isCardFlipped ? <CardBack /> : <CardFront />}
                     </div>
                 </>

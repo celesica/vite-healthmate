@@ -16,7 +16,8 @@ const AssessmentScoreChart = ({ assessmentName }) => {
     });
 
     useEffect(() => {
-        const assessments = state.chartData[`${assessmentName.toLowerCase()}Assessments`] || [];
+        const assessments = state.chartData[`${assessmentName?.toLowerCase() ?? ''}Assessments`] || [];
+        console.log(assessments);
 
         // Create an array of objects with submissionDate and formScore properties
         const assessmentData = assessments.map(assessment => ({

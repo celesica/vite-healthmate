@@ -5,6 +5,7 @@ import PrivateRoute from './PrivateRoute.jsx';
 import AuthPage from '../pages/AuthPage';
 import HomePage from '../pages/HomePage';
 import DashboardPage from '../pages/DashboardPage';
+import AssessmentsPage from "../pages/AssessmentsPage.jsx";
 import FunAssessmentPage from '../pages/formPages/FunAssessmentPage';
 import SleepAssessmentPage from '../pages/formPages/SleepAssessmentPage';
 import ExerciseAssessmentPage from '../pages/formPages/ExerciseAssessmentPage';
@@ -23,6 +24,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route element={<PrivateRoute />} >
                     <Route path="/dashboard" index element={<DashboardWithChartData />} />
+                    <Route path="/assessments" index element={<AssessmentsPage />} />
                     <Route path="/fun-test" index element={<FunAssessmentPage />} />
                     <Route path="/sleep-test" index element={<SleepAssessmentPage />} />
                     <Route path="/exercise-test" index element={<ExerciseAssessmentPage />} />
