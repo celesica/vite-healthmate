@@ -75,6 +75,8 @@ export const ChartDataProvider = ({ children }) => {
     }, [state.chartData]);
 
     useEffect(() => {
+        if (!currentUser) return;
+
         const assessmentTypes = [
             { collection: 'pillarAssessments', action: 'SET_PILLAR_ASSESSMENTS' },
             { collection: 'funAssessments', action: 'SET_FUN_ASSESSMENTS' },
@@ -96,7 +98,7 @@ export const ChartDataProvider = ({ children }) => {
         });
 
         return () => {
-            promises.forEach(promise => promise.catch(() => {}));
+            promises.forEach(promise => promise.finally(() => {}));
         };
     }, [currentUser]);
 

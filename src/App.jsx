@@ -27,9 +27,9 @@ function App() {
         <div className="App">
             <AuthProvider>
                 <AppProvider>
-                    <ChartDataProvider>
+                    {/*<ChartDataProvider>*/}
                         <Routes />
-                    </ChartDataProvider>
+                    {/*</ChartDataProvider>*/}
                 </AppProvider>
             </AuthProvider>
         </div>

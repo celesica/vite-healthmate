@@ -1,28 +1,10 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import Sidenav from '../components/dashboard/Sidenav';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
-import FunAssessment from "../components/assessments/FunAssessment";
-import SleepAssessment from "../components/assessments/SleepAssessment";
-import ExerciseAssessment from "../components/assessments/ExerciseAssessment";
-import EnvironmentAssessment from "../components/assessments/EnvironmentAssessment";
-import { IoInformationCircle } from 'react-icons/io5';
+import {IoInformationCircle} from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 const AssessmentsPage = () => {
-    const searchParams = new URLSearchParams(useLocation().search);
-    const assessmentType = searchParams.get('assessmentType');
-
-    let assessmentComponent;
-
-    if (assessmentType === 'fun') {
-        assessmentComponent = <FunAssessment />;
-    } else if (assessmentType === 'sleep') {
-        assessmentComponent = <SleepAssessment />;
-    } else if (assessmentType === 'exercise') {
-        assessmentComponent = <ExerciseAssessment />;
-    } else if (assessmentType === 'environment') {
-        assessmentComponent = <EnvironmentAssessment />;
-    }
 
     return (
         <div className="flex h-screen p-5">
@@ -36,11 +18,61 @@ const AssessmentsPage = () => {
                         <IoInformationCircle className="text-3xl text-ownTeal" />
                     </div>
                     <div className="flex-grow pl-4">
-                        <p className="font-bold">Answer each multiple-choice question as accurately as you can according to the point scale.</p>
-                        <p>Each multiple choice question has a numeric value that is also your "score" for that question.</p>
+                        <p className="font-bold">This page contains a collection of all the evaluation and assessment forms</p>
                     </div>
                 </div>
-                <div>{assessmentComponent}</div>
+                <div className="m-10 border border-lightTeal rounded-2xl p-5">
+                    <h2 className="font-bold text-xl mb-2">Obstacles and Pillars Assessments and Scorecards</h2>
+                    <p className="text-lg mb-4">Identify what’s been keeping you from getting from where you are to where you want to be at a pace you enjoy!</p>
+                    <div className="flex flex-wrap">
+                        <div className="w-full sm:w-1/2 md:w-1/4 p-3">
+                            <div className="bg-white rounded-lg shadow-lg h-full">
+                                <div className="p-5 text-center">
+                                    <h2 className="text-xl font-bold mb-2 text-darkTeal">Fun Assessment</h2>
+                                    <p className="text-medium text-gray-500">Enjoyment is the cornerstone to achieving vibrant health, and it’s a pillar that is frequently overlooked.</p>
+                                </div>
+                                <div className="px-5 text-center">
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=fun`}>
+                                        <button className="m-4">Take the Assessment</button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full sm:w-1/2 md:w-1/4 p-3">
+                            <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
+                                <div className="p-5 text-center">
+                                    <h2 className="text-xl font-bold mb-2">Sleep Assessment</h2>
+                                    <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes.</p>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=sleep`}>
+                                        <button className="m-4">Take the Assessment</button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full sm:w-1/2 md:w-1/4 p-3">
+                            <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
+                                <div className="p-5 text-center">
+                                    <h2 className="text-xl font-bold mb-2">Exercise Assessment</h2>
+                                    <p className="text-medium text-gray-500">Create a customized fitness plan that is easy, energizing, fun, AND fits into your busy life. </p>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=sleep`}>
+                                        <button className="m-4">Take the Assessment</button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full sm:w-1/2 md:w-1/4 p-3">
+                            <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
+                                <div className="p-5 text-center">
+                                    <h2 className="text-xl font-bold mb-2">Sleep Assessment</h2>
+                                    <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes.</p>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=sleep`}>
+                                        <button className="m-4">Take the Assessment</button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

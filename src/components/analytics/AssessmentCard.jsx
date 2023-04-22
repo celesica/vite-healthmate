@@ -91,7 +91,7 @@ const AssessmentCard = ({ assessmentName }) => {
                 </div>
                 <div className="space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <div className="flex justify-center mt-6 mx-12 mb-6">
-                        <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4" to={`/assessments?assessmentType=${assessmentName.toLowerCase()}`}>
+                        <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4" to={`/test?assessmentType=${assessmentName.toLowerCase()}`}>
                             <button >Retake Assessment</button>
                         </Link>
                         <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
@@ -133,9 +133,9 @@ const AssessmentCard = ({ assessmentName }) => {
                 </div>
                 <div className="space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <div className="flex justify-center mt-6 mx-12 mb-6">
-                        <button className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4">
-                            Retake Assessment
-                        </button>
+                        <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal mr-4" to={`/test?assessmentType=${assessmentName.toLowerCase()}`}>
+                            <button >Retake Assessment</button>
+                        </Link>
                         <button className="w-full bg-ownYellow text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" onClick={handleCardFlip}>
                             Flip Back
                         </button>

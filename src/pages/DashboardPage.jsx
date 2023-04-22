@@ -4,6 +4,7 @@ import PillarAssessmentChart from '../components/analytics/Charts/PillarAssessme
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
 import AssessmentCard from "../components/analytics/AssessmentCard.jsx";
 import GlucoseTracker from "../components/glucoseTracker/GlucoseTracker.jsx";
+import TabGroup from "../components/dashboard/TabGroup.jsx";
 
 const DashboardPage = () => {
     return (
@@ -13,10 +14,10 @@ const DashboardPage = () => {
             </div>
             <div className="main w-4/5 ml-auto py-4 px-8">
                 <DashboardHeader title="Wellness Overview" />
-                <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mt-8">
-                    <div className="border-ownTeal border-2 w-full md:col-span-3 bg-white rounded-lg shadow-xl overflow-hidden p-4 flex flex-col h-full">
+                <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mt-8 max-w-full">
+                    <div className="border-ownTeal border-2 w-full md:col-span-3 bg-white rounded-lg shadow-xl overflow-hidden p-4 flex flex-col">
                         <h2 className="text-lg font-medium mb-2">Pillar Assessment Chart</h2>
-                        <div className="p-4 flex-grow relative">
+                        <div className="p-4 relative">
                             <PillarAssessmentChart />
                         </div>
                     </div>
@@ -35,9 +36,18 @@ const DashboardPage = () => {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <GlucoseTracker />
+
+
+                <div className="flex flex-row items-center mt-10">
+                    <div className="w-1/3 mr-5">
+                        <GlucoseTracker/>
+                        {/*<GlucoseTimingChart/>*/}
+                    </div>
+                    <div className="w-2/3 ml-5 card p-6 bg-white rounded-3xl shadow-xl text-center h-full max-w-full px-4 w-full mb-6">
+                        <TabGroup />
+                    </div>
                 </div>
+
             </div>
         </div>
     );
