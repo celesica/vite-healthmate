@@ -5,6 +5,7 @@ import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
 import AssessmentCard from "../components/analytics/AssessmentCard.jsx";
 import GlucoseTracker from "../components/glucoseTracker/GlucoseTracker.jsx";
 import TabGroup from "../components/dashboard/TabGroup.jsx";
+import OnlineNotifications from "../components/chat/OnlineNotifications.jsx";
 
 const DashboardPage = () => {
     return (
@@ -41,7 +42,6 @@ const DashboardPage = () => {
                 <div className="flex flex-row items-center mt-10">
                     <div className="w-1/3 mr-5">
                         <GlucoseTracker/>
-                        {/*<GlucoseTimingChart/>*/}
                     </div>
                     <div className="w-2/3 ml-5 card p-6 bg-white rounded-3xl shadow-xl text-center h-full max-w-full px-4 w-full mb-6">
                         <TabGroup />

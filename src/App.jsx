@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import Routes from './routes/Routes.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { AppProvider } from './context/AppContext.jsx';
-import { ChartDataProvider } from './context/ChartDataContext.jsx';
+import { updateUserPresenceStatus } from './config/firebase';
+import { useAuth } from './context/AuthContext';
 import './App.css';
 import 'typeface-inter';
 import "flowbite";
+import OnlineNotifications from "./components/chat/OnlineNotifications.jsx";
 
 function App() {
+    const { currentUser } = useAuth();
     const [theme, setTheme] = useState('light');
 
     useEffect(() => {
@@ -19,6 +22,23 @@ function App() {
         }
     }, [theme]);
 
+    useEffect(() => {
+        if (currentUser) {
+            updateUserPresenceStatus(currentUser.uid, true);
+
+            window.addEventListener('beforeunload', () => {
+                updateUserPresenceStatus(currentUser.uid, false);
+            });
+
+            return () => {
+                updateUserPresenceStatus(currentUser.uid, false);
+                window.removeEventListener('beforeunload', () => {
+                    updateUserPresenceStatus(currentUser.uid, false);
+                });
+            };
+        }
+    }, [currentUser]);
+
     const handleThemeChange = () => {
         setTheme(theme === "dark" ? "light" : "dark");
     };
@@ -27,9 +47,7 @@ function App() {
         <div className="App">
             <AuthProvider>
                 <AppProvider>
-                    {/*<ChartDataProvider>*/}
-                        <Routes />
-                    {/*</ChartDataProvider>*/}
+                    <Routes />
                 </AppProvider>
             </AuthProvider>
         </div>

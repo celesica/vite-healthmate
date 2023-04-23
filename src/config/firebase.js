@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, updateDoc  } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyC55jntqY3WLwrI26MkSRCW0MHHkxvghDk",
@@ -27,4 +27,11 @@ async function addUserToFirestore(uid, displayName, email, photoURL, role = 'cli
     });
 }
 
-export { firebaseConfig, auth, googleProvider, db, addUserToFirestore };
+async function updateUserPresenceStatus(uid, isOnline) {
+    const userRef = doc(db, 'users', uid);
+    await updateDoc(userRef, {
+        isOnline: isOnline
+    });
+}
+
+export { firebaseConfig, auth, googleProvider, db, addUserToFirestore, updateUserPresenceStatus };

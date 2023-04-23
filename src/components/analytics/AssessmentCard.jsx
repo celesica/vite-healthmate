@@ -42,14 +42,16 @@ const AssessmentCard = ({ assessmentName }) => {
         (a, b) => b.submissionDate.toDate() - a.submissionDate.toDate()
     );
     const latestAssessment = sortedAssessments[0];
-    const bgColor = hasChartData ? getBgColor(latestAssessment?.formScore) : '#d1cece'
+    const bgColor = hasChartData && latestAssessment?.formScore !== undefined ? getBgColor(latestAssessment?.formScore) : '#d1cece'
     const { label: badgeLabel, badgeColor } = getBadgeInfo(latestAssessment?.formScore);
 
     const handleModalOpen = () => {
-        if (hasChartData) {
+        if (hasChartData && latestAssessment?.formScore !== undefined) {
             setShowModal(true);
         }
     };
+
+    console.log(latestAssessment);
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -154,27 +156,28 @@ const AssessmentCard = ({ assessmentName }) => {
             >
                 <div className="mb-2">
                     <h2 className="text-xl font-bold">{assessmentName} Assessment</h2>
-                    {hasChartData && (
+                    {hasChartData && latestAssessment?.formScore !== undefined && (
                         <p className="text-sm">
                             <FaRegCalendarAlt className="inline" /> {formattedDate}
                         </p>
                     )}
                 </div>
-                {hasChartData ? (
+                {!hasChartData || latestAssessment?.formScore === undefined ? (
+                    <div className="text-center text-gray-600">You haven't taken this test yet.</div>
+                ) : (
                     <>
                         <div className="flex justify-between items-center">
                             <p className="font-bold text-4xl">
-                                {latestAssessment.formScore}
+                                {latestAssessment?.formScore}
                             </p>
                             <span style={{backgroundColor: badgeColor}} className="ml-2 inline-flex items-center justify-center h-6 px-2 text-xs font-medium text-white rounded">
-                                {badgeLabel}
-                            </span>
+                {badgeLabel}
+            </span>
                         </div>
                         <div className="text-xs text-center text-red-400">Click to View Analysis</div>
                     </>
-                ) : (
-                    <div className="text-center text-gray-600">You haven't taken this test yet.</div>
                 )}
+
             </div>
             {showModal && (
                 <>

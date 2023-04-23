@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { auth } from '../../config/firebase';
+import { IconContext } from 'react-icons';
 import { useAppContext } from '../../context/AppContext';
 import { IoIosNotifications, IoMdSettings } from 'react-icons/io';
 import LetterAvatar from 'react-lettered-avatar';
@@ -12,8 +14,12 @@ const DashboardHeader = ({title}) => {
         <div className="flex justify-between items-center mb-4">
             <div className="text-2xl font-bold text-ownOrange">{title}</div>
             <div className="flex items-center">
-                <IoMdSettings className="mr-4 mr-4 text-3xl text-ownTeal flex rounded-full focus:outline-none" />
-                <IoIosNotifications className="mr-4 mr-4 text-3xl text-ownTeal" />
+                <IconContext.Provider value={{className: "mr-4 text-3xl text-ownTeal"}}>
+                    <Link to="/settings"><IoMdSettings /></Link>
+                </IconContext.Provider>
+                <IconContext.Provider value={{className: "mr-4 text-3xl text-ownTeal"}}>
+                    <Link to="/profile"><IoIosNotifications /></Link>
+                </IconContext.Provider>
                 <LetterAvatar
                     className="mr-20"
                     name={initials}

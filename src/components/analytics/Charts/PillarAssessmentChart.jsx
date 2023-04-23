@@ -216,7 +216,9 @@ const PillarAssessmentChart = () => {
     return (
         <div>
             {!hasChartData ? (
-                    <NoData onButtonClick={() => console.log('Take the test now clicked!')} />
+                    <div className="flex justify-center h-full">
+                        <NoData onButtonClick={() => console.log('Take the test now clicked!')} />
+                    </div>
             ) : (
                 <canvas ref={chartCanvasRef}></canvas>
             )}

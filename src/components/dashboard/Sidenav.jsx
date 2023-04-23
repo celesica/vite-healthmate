@@ -4,8 +4,10 @@ import { useAppContext } from '../../context/AppContext';
 import { RiDashboardFill } from 'react-icons/ri';
 import { MdAssessment } from 'react-icons/md';
 import { IoMdAnalytics } from 'react-icons/io';
-import { BiHome, BiUser, BiCalendar, BiBook, BiCog, BiLogOut, BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { BiUser, BiCog, BiLogOut } from "react-icons/bi";
+import { BsChatSquareDotsFill } from "react-icons/bs";
 import {auth} from "../../config/firebase.js";
+import OnlineNotifications from "../chat/OnlineNotifications.jsx";
 
 const Sidenav = () => {
     const { state: { displayName, initials, randomColor }, dispatch } = useAppContext();
@@ -16,11 +18,11 @@ const Sidenav = () => {
     };
 
     return (
-        <nav className="flex flex-col justify-between p-4 text-white">
+        <nav className="flex flex-col justify-between p-4">
             <div className="flex items-center justify-center">
                 <img src="/assets/healthmate-main.png" alt="HealthMate Logo" className="h-32 mr-4" />
             </div>
-            <div className="w-64 py-4 px-6 mt-5">
+            <div className="w-64 py-4 px-6 mt-5 text-white">
                 <ul className="space-y-4">
                     <li>
                         <a href="/dashboard" className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
@@ -29,7 +31,7 @@ const Sidenav = () => {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
+                        <a href="/profile" className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
                             <BiUser className="inline-block mr-2" size={24} />
                             <span className="text-lg">Profile</span>
                         </a>
@@ -47,9 +49,9 @@ const Sidenav = () => {
                         </a>
                     </li>
                     <li>
-                        <a href="/settings" className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
-                            <BiCog className="inline-block mr-2" size={24} />
-                            <span className="text-lg">Settings</span>
+                        <a href="/messages" className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
+                            <BsChatSquareDotsFill className="inline-block mr-2" size={24} />
+                            <span className="text-lg">Messages</span>
                         </a>
                     </li>
                     <li>
@@ -59,8 +61,8 @@ const Sidenav = () => {
                         </a>
                     </li>
                 </ul>
-
             </div>
+            <OnlineNotifications />
             <div className="flex-1"></div>
         </nav>
 

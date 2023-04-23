@@ -11,6 +11,9 @@ import SleepAssessmentPage from '../pages/formPages/SleepAssessmentPage';
 import ExerciseAssessmentPage from '../pages/formPages/ExerciseAssessmentPage';
 import EnvironmentAssessmentPage from '../pages/formPages/EnvironmentAssessmentPage';
 import AssessmentsPage from "../pages/AssessmentsPage.jsx";
+import AnalyticsPage from "../pages/AnalyticsPage.jsx";
+import ProfilePage from "../pages/ProfilePage.jsx";
+import MessagesPage from "../pages/MessagesPage.jsx";
 
 const WrappedRoutes = () => {
     return (
@@ -18,6 +21,9 @@ const WrappedRoutes = () => {
             <Routes>
                 <Route path="/dashboard" index element={<DashboardPage />} />
                 <Route path="/assessments" index element={<AssessmentsPage />} />
+                <Route path="/profile" index element={<ProfilePage />} />
+                <Route path="/analytics" index element={<AnalyticsPage />} />
+                <Route path="/messages" index element={<MessagesPage />} />
                 <Route path="/test" index element={<TestPages />} />
                 <Route path="/fun-test" index element={<FunAssessmentPage />} />
                 <Route path="/sleep-test" index element={<SleepAssessmentPage />} />
