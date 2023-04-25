@@ -13,6 +13,7 @@ const initialState = {
         pillarAssessments: [],
         exerciseAssessments: [],
         environmentAssessments: [],
+        dietAssessments: [],
     },
     loading: true,
     hasChartData: false,
@@ -30,6 +31,8 @@ const reducer = (state, action) => {
             return { ...state, chartData: { ...state.chartData, exerciseAssessments: action.payload }};
         case 'SET_ENVIRONMENT_ASSESSMENTS':
             return { ...state, chartData: { ...state.chartData, environmentAssessments: action.payload }};
+        case 'SET_DIET_ASSESSMENTS':
+            return { ...state, chartData: { ...state.chartData, dietAssessments: action.payload }};
         case 'SET_LOADING':
             return { ...state, loading: action.payload };
         case 'SET_HAS_CHART_DATA':
@@ -66,13 +69,16 @@ export const ChartDataProvider = ({ children }) => {
             state.chartData.funAssessments.length > 0 ||
             state.chartData.sleepAssessments.length > 0 ||
             state.chartData.exerciseAssessments.length > 0 ||
-            state.chartData.environmentAssessments.length > 0;
+            state.chartData.environmentAssessments.length > 0 ||
+            state.chartData.dietAssessments.length > 0;
         dispatch({ type: 'SET_HAS_CHART_DATA', payload: hasChartData });
     };
 
     useEffect(() => {
         updateHasChartData();
     }, [state.chartData]);
+
+    // console.log(state.chartData);
 
     useEffect(() => {
         if (!currentUser) return;
@@ -83,6 +89,7 @@ export const ChartDataProvider = ({ children }) => {
             { collection: 'sleepAssessments', action: 'SET_SLEEP_ASSESSMENTS' },
             { collection: 'exerciseAssessments', action: 'SET_EXERCISE_ASSESSMENTS' },
             { collection: 'environmentAssessments', action: 'SET_ENVIRONMENT_ASSESSMENTS' },
+            { collection: 'dietAssessments', action: 'SET_DIET_ASSESSMENTS' },
         ];
 
         const promises = assessmentTypes.map(({ collection, action }) => {

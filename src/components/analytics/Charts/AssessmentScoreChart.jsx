@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useChartDataContext } from '../../../context/ChartDataContext';
+import 'chartjs-plugin-zoom';
 
 const AssessmentScoreChart = ({ assessmentName }) => {
     const { state } = useChartDataContext();
@@ -44,7 +45,7 @@ const AssessmentScoreChart = ({ assessmentName }) => {
             labels: submissionDates,
             datasets: [
                 {
-                    label: `${assessmentName} Health Scores`,
+                    label: `${assessmentName} Health Score`,
                     data: scores,
                     backgroundColor: backgroundColors,
                 },
@@ -59,8 +60,44 @@ const AssessmentScoreChart = ({ assessmentName }) => {
                 options={{
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            max: 100,
+                            ticks: {
+                                beginAtZero: true,
+                                max: 100,
+                            },
+                        },
+                        x: {
+                            type: 'timeseries',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MM/DD/YYYY',
+                                },
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date',
+                            },
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: 20,
+                            },
+                        },
+                    },
+                    plugins: {
+                        zoom: {
+                            pan: {
+                                enabled: true,
+                                mode: 'x',
+                            },
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true,
+                                },
+                                mode: 'x',
+                            }
                         },
                     },
                 }}

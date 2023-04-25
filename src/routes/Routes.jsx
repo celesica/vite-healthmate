@@ -12,8 +12,10 @@ import ExerciseAssessmentPage from '../pages/formPages/ExerciseAssessmentPage';
 import EnvironmentAssessmentPage from '../pages/formPages/EnvironmentAssessmentPage';
 import AssessmentsPage from "../pages/AssessmentsPage.jsx";
 import AnalyticsPage from "../pages/AnalyticsPage.jsx";
-import ProfilePage from "../pages/ProfilePage.jsx";
+import DietAssessmentPage from "../components/assessments/DietAssessment.jsx";
 import MessagesPage from "../pages/MessagesPage.jsx";
+import Settings from "../pages/Settings.jsx";
+import ProfilePage from "../pages/ProfilePage.jsx";
 
 const WrappedRoutes = () => {
     return (
@@ -21,14 +23,16 @@ const WrappedRoutes = () => {
             <Routes>
                 <Route path="/dashboard" index element={<DashboardPage />} />
                 <Route path="/assessments" index element={<AssessmentsPage />} />
-                <Route path="/profile" index element={<ProfilePage />} />
                 <Route path="/analytics" index element={<AnalyticsPage />} />
+                <Route path="/profile" index element={<ProfilePage />} />
                 <Route path="/messages" index element={<MessagesPage />} />
                 <Route path="/test" index element={<TestPages />} />
+                <Route path="/settings" index element={<Settings />} />
                 <Route path="/fun-test" index element={<FunAssessmentPage />} />
                 <Route path="/sleep-test" index element={<SleepAssessmentPage />} />
                 <Route path="/exercise-test" index element={<ExerciseAssessmentPage />} />
                 <Route path="/environment-test" index element={<EnvironmentAssessmentPage />} />
+                <Route path="/diet-test" index element={<DietAssessmentPage />} />
             </Routes>
         </ChartDataProvider>
     );

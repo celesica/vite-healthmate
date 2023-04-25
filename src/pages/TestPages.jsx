@@ -6,6 +6,7 @@ import FunAssessment from "../components/assessments/FunAssessment";
 import SleepAssessment from "../components/assessments/SleepAssessment";
 import ExerciseAssessment from "../components/assessments/ExerciseAssessment";
 import EnvironmentAssessment from "../components/assessments/EnvironmentAssessment";
+import DietAssessment from "../components/assessments/DietAssessment.jsx";
 import { IoInformationCircle } from 'react-icons/io5';
 import { useChartDataContext } from "../context/ChartDataContext.jsx";
 
@@ -24,6 +25,8 @@ const TestPages = () => {
         assessmentComponent = <ExerciseAssessment />;
     } else if (assessmentType === 'environment') {
         assessmentComponent = <EnvironmentAssessment />;
+    } else if (assessmentType === 'diet') {
+        assessmentComponent = <DietAssessment />;
     }
 
     return (

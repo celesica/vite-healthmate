@@ -1,0 +1,69 @@
+[
+  {
+    "id": "q1",
+    "label": "Dietary Imbalances",
+    "type": "matrix",
+    "rows": [
+      "Artificial sweeteners",
+      "Candy and desserts using sugar",
+      "Fast foods",
+      "Fried foods",
+      "Vegetable oils: safflower, sunflower, peanut, canola",
+      "Luncheon meats",
+      "Margarine",
+      "Milk products",
+      "Refined flour/baked goods",
+      "Water, tap",
+      "Carbonated beverages",
+      "Coffee, regular",
+      "Coffee, decaf",
+      "Tea, black or other caffeinated",
+      "Bottled or canned fruit juice",
+      "Fresh fruit juice",
+      "Beer",
+      "Wine",
+      "Other alcoholic beverages",
+      "Soft drinks, sweetened",
+      "Soft drinks, sugar-free",
+      "Soft drinks, caffeinated",
+      "Red meat, commercial",
+      "Poultry, commercial",
+      "Shell fish",
+      "Eggs, commercial",
+      "Cheese",
+      "Butter",
+      "Ice cream",
+      "Other dairy",
+      "Refined grains (white rice, etc.)",
+      "Bread, white, gluten containing",
+      "Bread, gluten-free",
+      "Bread, whole wheat",
+      "Bread, rye, flax, or other gluten containing grains",
+      "Pasta, white, semolina",
+      "Pasta, whole wheat",
+      "Pasta, gluten-free",
+      "Chips",
+      "Crackers, whole grain",
+      "Crackers, commercial",
+      "Tortillas, wheat"
+    ],
+    "columns": [
+      {
+        "label": "Rarely or ever consume",
+        "score": "0"
+      },
+      {
+        "label": "Consume 2 to 3 times a month",
+        "score": "1"
+      },
+      {
+        "label": "Consume on a weekly basis",
+        "score": "2"
+      },
+      {
+        "label": "Consume daily or almost every day",
+        "score": "3"
+      }
+    ]
+  }
+]

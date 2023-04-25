@@ -29,9 +29,9 @@ const AssessmentsPage = () => {
                             <div className="bg-white rounded-lg shadow-lg h-full">
                                 <div className="p-5 text-center">
                                     <h2 className="text-xl font-bold mb-2 text-darkTeal">Fun Assessment</h2>
-                                    <p className="text-medium text-gray-500">Enjoyment is the cornerstone to achieving vibrant health, and it’s a pillar that is frequently overlooked.</p>
+                                    <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes.</p>
                                 </div>
-                                <div className="px-5 text-center">
+                                <div className="px-5 text-center items-stretch">
                                     <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=fun`}>
                                         <button className="m-4">Take the Assessment</button>
                                     </Link>
@@ -47,14 +47,15 @@ const AssessmentsPage = () => {
                                         <button className="m-4">Take the Assessment</button>
                                     </Link>
                                 </div>
+
                             </div>
                         </div>
                         <div className="w-full sm:w-1/2 md:w-1/4 p-3">
                             <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
                                 <div className="p-5 text-center">
                                     <h2 className="text-xl font-bold mb-2">Exercise Assessment</h2>
-                                    <p className="text-medium text-gray-500">Create a customized fitness plan that is easy, energizing, fun, AND fits into your busy life. </p>
-                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=sleep`}>
+                                    <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes. </p>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=exercise`}>
                                         <button className="m-4">Take the Assessment</button>
                                     </Link>
                                 </div>
@@ -63,9 +64,20 @@ const AssessmentsPage = () => {
                         <div className="w-full sm:w-1/2 md:w-1/4 p-3">
                             <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
                                 <div className="p-5 text-center">
-                                    <h2 className="text-xl font-bold mb-2">Sleep Assessment</h2>
+                                    <h2 className="text-xl font-bold mb-2">Environment Assessment</h2>
                                     <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes.</p>
-                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=sleep`}>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=environment`}>
+                                        <button className="m-4">Take the Assessment</button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full sm:w-1/2 md:w-1/4 p-3">
+                            <div className="bg-white rounded-lg shadow-lg h-full text-darkTeal">
+                                <div className="p-5 text-center">
+                                    <h2 className="text-xl font-bold mb-2">Diet Assessment</h2>
+                                    <p className="text-medium text-gray-500">One of the best ways to improve your health is to “sleep on it”. Restful and restorative sleep is integral to healing and rejuvenation processes.</p>
+                                    <Link className="w-full bg-darkTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal" to={`/test?assessmentType=diet`}>
                                         <button className="m-4">Take the Assessment</button>
                                     </Link>
                                 </div>

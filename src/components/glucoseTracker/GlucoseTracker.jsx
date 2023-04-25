@@ -91,13 +91,18 @@ const GlucoseTracker = () => {
     return (
         <>
             <div className="card p-6 bg-white rounded-3xl shadow-xl text-center h-full max-w-full px-4 w-full mb-6">
-                <h3 className="text-xl font-bold center text-darkTeal">Latest Glucose Check:</h3>
-                <p className="text-ownOrange mb-4">{moment(glucoseData.submissionDate?.toDate()).format('MMMM Do YYYY, h:mm A')}</p>
-                <div className="h-full w-full inset-0">
-                        <GlucoseLevelChart />
-                </div>
-                {/*<p className="text-gray-500">Glucose Value: {glucoseData.glucoseValue}</p>*/}
-                <p className="text-gray-500 mt-4">Taken During: <span className="font-bold">{glucoseData.timing}</span></p>
+                {glucoseData && glucoseData.submissionDate ? (
+                    <>
+                        <h3 className="text-xl font-bold center text-darkTeal">Latest Glucose Check:</h3>
+                        <p className="text-ownOrange mb-4">{moment(glucoseData.submissionDate?.toDate()).format('MMMM Do YYYY, h:mm A')}</p>
+                        <div className="w-full inset-0">
+                            <GlucoseLevelChart glucoseData={glucoseData} latestGlucoseValue={glucoseData.glucoseValue} />
+                        </div>
+                        <p className="text-gray-500 mt-4">Taken During: <span className="font-bold">{glucoseData.timing}</span></p>
+                    </>
+                ) : (
+                    <p className="text-xl font-bold center text-darkTeal">No Glucose Record yet</p>
+                )}
                 <p className="mt-2 py-2 px-4 inline-block text-center mb-3 rounded leading-5 text-ownTeal border border-ownTeal hover:text-white hover:bg-ownTeal hover:ring-0 hover:border-ownTeal focus:bg-indigo-600 cursor-pointer" onClick={handleModalOpen}>Log New Entry</p>
             </div>
 

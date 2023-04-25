@@ -2,8 +2,8 @@ import React from 'react';
 import Sidenav from '../components/dashboard/Sidenav';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import {IoInformationCircle} from "react-icons/io5";
-import PrivateChat from "../components/chat/PrivateChat.jsx";
-import MembersOnline from "../components/chat/MembersOnline.jsx";
+// import PrivateChat from "../components/chat/PrivateChat.jsx";
+// import MembersOnline from "../components/chat/MembersOnline.jsx";
 
 const AssessmentsPage = () => {
 
@@ -19,12 +19,12 @@ const AssessmentsPage = () => {
                         <IoInformationCircle className="text-3xl text-ownTeal" />
                     </div>
                     <div className="flex-grow pl-4">
-                        <p className="font-bold">This page contains a collection of all the evaluation and assessment forms</p>
+                        <p className="font-bold">Let's build a happy and healthy community!</p>
                     </div>
                 </div>
                 <div className="m-10 border border-lightTeal rounded-2xl p-5">
                     {/*<PrivateChat />*/}
-                    <MembersOnline />
+                    {/*<MembersOnline />*/}
                 </div>
             </div>
         </div>

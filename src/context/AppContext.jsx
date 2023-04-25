@@ -54,6 +54,7 @@ const createMainAssessment = async (userID, collectionName, docIdPrefix) => {
             sleepScore: 0,
             exerciseScore: 0,
             environmentScore: 0,
+            dietScore: 0,
             totalScore: 0
         });
     }
@@ -66,10 +67,12 @@ const updatePillarAssessments = (mainDocSnapshot, formName, healthScore) => {
         sleepScore: formName === 'Sleep Assessment' ? healthScore : mainDocSnapshot.data().sleepScore,
         exerciseScore: formName === 'Exercise Assessment' ? healthScore : mainDocSnapshot.data().exerciseScore,
         environmentScore: formName === 'Environment Assessment' ? healthScore : mainDocSnapshot.data().environmentScore,
+        dietScore: formName === 'Diet Assessment' ? healthScore : mainDocSnapshot.data().dietScore,
         totalScore: (formName === 'Fun Assessment' ? healthScore : mainDocSnapshot.data().funScore) +
             (formName === 'Sleep Assessment' ? healthScore : mainDocSnapshot.data().sleepScore) +
             (formName === 'Exercise Assessment' ? healthScore : mainDocSnapshot.data().exerciseScore) +
-            (formName === 'Environment Assessment' ? healthScore : mainDocSnapshot.data().environmentScore),
+            (formName === 'Environment Assessment' ? healthScore : mainDocSnapshot.data().environmentScore) +
+            (formName === 'Diet Assessment' ? healthScore : mainDocSnapshot.data().dietScore)
     };
 };
 

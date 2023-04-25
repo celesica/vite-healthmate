@@ -38,9 +38,9 @@ const AssessmentCard = ({ assessmentName }) => {
     const { state, hasChartData } = useChartDataContext();
 
     const assessments = state.chartData[`${assessmentName.toLowerCase()}Assessments`];
-    const sortedAssessments = assessments.sort(
+    const sortedAssessments = assessments ? assessments.sort(
         (a, b) => b.submissionDate.toDate() - a.submissionDate.toDate()
-    );
+    ) : [];
     const latestAssessment = sortedAssessments[0];
     const bgColor = hasChartData && latestAssessment?.formScore !== undefined ? getBgColor(latestAssessment?.formScore) : '#d1cece'
     const { label: badgeLabel, badgeColor } = getBadgeInfo(latestAssessment?.formScore);
@@ -50,8 +50,6 @@ const AssessmentCard = ({ assessmentName }) => {
             setShowModal(true);
         }
     };
-
-    console.log(latestAssessment);
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -68,7 +66,7 @@ const AssessmentCard = ({ assessmentName }) => {
             <div>
                 <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <div className="flex flex-col">
-                        <h2 className="text-3xl font-bold mb-2 text-ownOrange">{assessmentName} Assessment</h2>
+                        <h2 className="text-left text-3xl font-bold mb-2 text-ownOrange">{assessmentName}</h2>
                         <p className="text-lg text-gray-500 mb-4">
                             Last taken on {' '}
                             {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(latestAssessment?.submissionDate.toDate())}
@@ -110,7 +108,7 @@ const AssessmentCard = ({ assessmentName }) => {
             <div>
                 <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <div className="flex flex-col text-left">
-                        <h2 className="text-3xl font-bold mb-2 text-ownOrange">{assessmentName} Assessment</h2>
+                        <h2 className="text-3xl font-bold mb-2 text-ownOrange">{assessmentName}</h2>
                         <p className="text-lg text-gray-500 mb-4">
                             As of {' '}
                             {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(latestAssessment?.submissionDate.toDate())}
@@ -155,7 +153,7 @@ const AssessmentCard = ({ assessmentName }) => {
                 style={{backgroundColor: bgColor}}
             >
                 <div className="mb-2">
-                    <h2 className="text-xl font-bold">{assessmentName} Assessment</h2>
+                    <h2 className="text-xl font-bold">{assessmentName}</h2>
                     {hasChartData && latestAssessment?.formScore !== undefined && (
                         <p className="text-sm">
                             <FaRegCalendarAlt className="inline" /> {formattedDate}
@@ -183,20 +181,6 @@ const AssessmentCard = ({ assessmentName }) => {
                 <>
                     <div className="fixed top-0 left-0 w-screen h-screen bg-gray-700 opacity-50 z-10"></div>
                     <div className="flex flex-col justify-center text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg z-20 " style={{ width: '40rem', }}>
-                        {/*<div className="flex justify-end">*/}
-                        {/*    <button*/}
-                        {/*        className="text-gray-600 hover:text-gray-800"*/}
-                        {/*        onClick={handleModalClose}*/}
-                        {/*    >*/}
-                        {/*        <svg*/}
-                        {/*            className="h-6 w-6 fill-current"*/}
-                        {/*            xmlns="http://www.w3.org/2000/svg"*/}
-                        {/*            viewBox="0 0 24 24"*/}
-                        {/*        >*/}
-                        {/*            <path d="M18.3 5.71a1 1 0 0 0-1.42 0L12 10.59l-4.88-4.88a1 1 0 0 0-1.42 1.42L10.59 12l-4.88 4.88a1 1 0 0 0 1.42 1.42L12 13.41l4.88 4.88a1 1 0 0 0 1.42-1.42L13.41 12l4.88-4.88a1 1 0 0 0 0-1.41z" />*/}
-                        {/*        </svg>*/}
-                        {/*    </button>*/}
-                        {/*</div>*/}
                             {isCardFlipped ? <CardBack /> : <CardFront />}
                     </div>
                 </>

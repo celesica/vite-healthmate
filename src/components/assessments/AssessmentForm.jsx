@@ -54,6 +54,9 @@ const AssessmentForm = ({
             } else if (formName === "Environment Assessment") {
                 const environmentSet = 249;
                 healthScore = Math.round((testScore / environmentSet) * 100);
+            } else if (formName === "Diet Assessment") {
+                const dietSet = 126;
+                healthScore = Math.round((testScore / dietSet) * 100);
             }
 
             console.log('Health Score:', healthScore);
@@ -237,7 +240,7 @@ const AssessmentForm = ({
                                 <h2 className="font-bold text-ownTeal text-xl">Your Trend So Far</h2>
                                 <AssessmentScoreChart assessmentName={formName?.split(' ')[0]} />
                                 <button className="w-full bg-ownTeal text-white font-bold px-4 py-2 rounded-lg hover:bg-ownTeal">
-                                    <Link to="/dashboard">Go to Dashboard</Link>
+                                    <Link to="/assessments">Back to Assessments</Link>
                                 </button>
                             </div>
                         )}

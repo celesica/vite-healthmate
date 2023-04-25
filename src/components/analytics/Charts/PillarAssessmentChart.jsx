@@ -7,6 +7,7 @@ import moment from 'moment';
 import 'chartjs-adapter-moment';
 import LoadingState from '../../../components/dashboard/LoadingState';
 import NoData from '../../analytics/Charts/NoData';
+import assessmentForm from "../../assessments/AssessmentForm.jsx";
 
 Chart.register(annotationPlugin, zoomPlugin);
 
@@ -17,7 +18,7 @@ const PillarAssessmentChart = () => {
 
     const getSubmissionDates = (assessments) => {
         return assessments.map((assessment) => {
-            return moment(assessment.submissionDate.seconds * 1000).format('YYYY-MM-DDTHH:mm:ss.sssZ');
+            return moment(assessment.submissionDate.seconds * 1000).toISOString();
         });
     };
 
@@ -56,6 +57,8 @@ const PillarAssessmentChart = () => {
                 };
             };
 
+            console.log(createAssessmentDataset('exercise', '#04E4D8'));
+
             const pillarAssessmentChart = new Chart(pillarAssessmentChartCanvas, {
                 type: 'line',
                 data: {
@@ -65,6 +68,7 @@ const PillarAssessmentChart = () => {
                         createAssessmentDataset('sleep', '#03AAC2'),
                         createAssessmentDataset('exercise', '#04E4D8'),
                         createAssessmentDataset('environment', '#FF9658'),
+                        createAssessmentDataset('diet', '#b7f895'),
                     ],
                 },
                 options: {

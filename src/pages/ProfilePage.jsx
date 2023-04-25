@@ -1,33 +1,28 @@
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from 'react';
+import Sidenav from '../components/dashboard/Sidenav';
+import DashboardHeader from '../components/dashboard/DashboardHeader';
+import { IoInformationCircle } from 'react-icons/io5';
 
-function ProfilePage() {
-    const { currentUser, userData } = useAuth();
-    console.log(currentUser);
+const ProfilePage = () => {
 
     return (
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center">
-                <div className="rounded-full overflow-hidden h-32 w-32 bg-gray-200">
-                    <img src={currentUser.photoURL} alt="Profile" className="h-32 w-32 object-cover" />
-                </div>
-                <div className="mt-4">
-                    <h1 className="text-2xl font-bold">{currentUser.displayName}</h1>
-                    <p className="mt-2 text-gray-600">{currentUser.email}</p>
-                </div>
-                <div className="mt-8 flex justify-center space-x-4">
-                    <a href="#" className="text-gray-600 hover:text-gray-900">
-                        Edit Name
-                    </a>
-                    <a href="#" className="text-gray-600 hover:text-gray-900">
-                        Edit Email
-                    </a>
-                    <a href="#" className="text-gray-600 hover:text-gray-900">
-                        Update Password
-                    </a>
+        <div className="flex h-screen p-5">
+            <div className="navbar w-1/5 bg-darkTeal flex-shrink-0 min-h-full z-10 p-4 rounded-lg shadow-lg">
+                <Sidenav />
+            </div>
+            <div className="main w-4/5 ml-auto py-4 px-8">
+                <DashboardHeader title="Take Charge of Your Health!" />
+                <div className="p-4 mb-4 text-lg text-darkTeal rounded-lg bg-superLightTeal dark:bg-gray-800 dark:text-blue-400 border-t-4 border-ownTeal flex items-start" role="alert">
+                    <div className="flex-none">
+                        <IoInformationCircle className="text-3xl text-ownTeal" />
+                    </div>
+                    <div className="flex-grow pl-4">
+                        <p className="font-bold">Track your health charts.</p>
+                    </div>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default ProfilePage;

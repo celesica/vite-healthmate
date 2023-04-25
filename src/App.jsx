@@ -8,7 +8,7 @@ import { useAuth } from './context/AuthContext';
 import './App.css';
 import 'typeface-inter';
 import "flowbite";
-import OnlineNotifications from "./components/chat/OnlineNotifications.jsx";
+// import OnlineNotifications from "./components/chat/OnlineNotifications.jsx";
 
 function App() {
     const { currentUser } = useAuth();
@@ -47,6 +47,7 @@ function App() {
         <div className="App">
             <AuthProvider>
                 <AppProvider>
+                    {/*<OnlineNotifications />*/}
                     <Routes />
                 </AppProvider>
             </AuthProvider>

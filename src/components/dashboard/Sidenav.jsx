@@ -7,7 +7,7 @@ import { IoMdAnalytics } from 'react-icons/io';
 import { BiUser, BiCog, BiLogOut } from "react-icons/bi";
 import { BsChatSquareDotsFill } from "react-icons/bs";
 import {auth} from "../../config/firebase.js";
-import OnlineNotifications from "../chat/OnlineNotifications.jsx";
+// import OnlineNotifications from "../chat/OnlineNotifications.jsx";
 
 const Sidenav = () => {
     const { state: { displayName, initials, randomColor }, dispatch } = useAppContext();
@@ -55,14 +55,13 @@ const Sidenav = () => {
                         </a>
                     </li>
                     <li>
-                        <a onClick={handleSignOut} className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg">
+                        <a onClick={handleSignOut} className="block py-2 px-4 text-superLightTeal hover:bg-ownOrange hover:text-white rounded-lg cursor-pointer">
                             <BiLogOut className="inline-block mr-2" size={24} />
                             <span className="text-lg">Logout</span>
                         </a>
                     </li>
                 </ul>
             </div>
-            <OnlineNotifications />
             <div className="flex-1"></div>
         </nav>
 

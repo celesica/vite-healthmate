@@ -1,45 +1,58 @@
 import React, { useState } from 'react';
 import Sidenav from '../components/dashboard/Sidenav';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
-import {IoInformationCircle} from "react-icons/io5";
+import { IoInformationCircle } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-import Modal from 'react-modal';
-
-const Card = ({ onClick, title, content }) => {
-    return (
-        <div
-            className="bg-white shadow-md p-6 rounded-lg cursor-pointer"
-            onClick={onClick}
-        >
-            <h3 className="font-bold text-xl mb-2">{title}</h3>
-            <p>{content}</p>
-        </div>
-    );
-};
+import PillarAssessmentChart from '../components/analytics/Charts/PillarAssessmentChart.jsx';
+import AssessmentScoreChart from '../components/analytics/Charts/AssessmentScoreChart.jsx';
+import GlucoseTracker from "../components/glucoseTracker/GlucoseTracker.jsx";
+import GlucoseLevelChart from "../components/glucoseTracker/GlucoseLevelChart.jsx";
+import GlucoseTimingChart from "../components/glucoseTracker/GlucoseTimingChart.jsx";
 
 const AnalyticsPage = () => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalContent, setModalContent] = useState({ title: '', content: '' });
+    const [selectedChart, setSelectedChart] = useState(null);
 
-    const openModal = (title, content) => {
-        setModalContent({ title, content });
-        setModalIsOpen(true);
-    };
-    const closeModal = () => setModalIsOpen(false);
-
-    const cards = [
+    const charts = [
         {
-            title: 'Pillar Assessment Chart',
-            content: 'Contains the health scores of Pillar Assessments'
+            id: 1,
+            title: 'Pillar Assessments',
+            chart: <PillarAssessmentChart />,
         },
         {
-            title: 'Card 2',
-            content: 'Random text content for Card 2'
+            id: 2,
+            title: 'Fun Assessment',
+            chart: <AssessmentScoreChart assessmentName={'Fun'} />,
         },
         {
-            title: 'Card 3',
-            content: 'Random text content for Card 3'
-        }
+            id: 3,
+            title: 'Sleep Assessment',
+            chart: <AssessmentScoreChart assessmentName={'Sleep'} />,
+        },
+        {
+            id: 4,
+            title: 'Exercise Assessment',
+            chart: <AssessmentScoreChart assessmentName={'Exercise'} />,
+        },
+        {
+            id: 5,
+            title: 'Environment Assessment',
+            chart: <AssessmentScoreChart assessmentName={'Environment'} />,
+        },
+        {
+            id: 6,
+            title: 'Diet Assessment',
+            chart: <AssessmentScoreChart assessmentName={'Diet'} />,
+        },
+        {
+            id: 7,
+            title: 'Glucose Levels',
+            chart: <GlucoseLevelChart />,
+        },
+        {
+            id: 8,
+            title: 'Glucose Timing Radar',
+            chart: <GlucoseTimingChart />,
+        },
     ];
 
     return (
@@ -54,36 +67,45 @@ const AnalyticsPage = () => {
                         <IoInformationCircle className="text-3xl text-ownTeal" />
                     </div>
                     <div className="flex-grow pl-4">
-                        <p className="font-bold">This page contains a collection of all the evaluation and assessment forms</p>
+                        <p className="font-bold">Track your health charts.</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 w-full max-w-screen-lg">
-                    {cards.map((card, i) => (
-                        <Card
-                            key={i}
-                            title={card.title}
-                            content={card.content}
-                            onClick={() => openModal(card.title, card.content)}
-                        />
+                <div className="flex flex-wrap justify-center">
+                    {charts.map((chart) => (
+                        <div
+                            key={chart.id}
+                            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-2 cursor-pointer"
+                            onClick={() => setSelectedChart(chart)}
+                        >
+                            <div className="border border-gray-300 rounded-lg overflow-hidden bg-white shadow p-4">
+                                {chart.chart}
+                            </div>
+                            <div className="mt-3 font-medium text-darkTeal font-extrabold text-medium mb-4">{chart.title}</div>
+                        </div>
                     ))}
                 </div>
-                <Modal
-                    isOpen={modalIsOpen}
-                    onRequestClose={closeModal}
-                    className="fixed inset-0 flex items-center justify-center p-6 overflow-auto text-center align-middle transition-all transform bg-gray-500 bg-opacity-50"
-                    overlayClassName="fixed inset-0 z-50 overflow-y-auto"
-                >
-                    <div className="inline-block w-11/12 md:max-w-3xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                        <h2 className="text-2xl font-bold mb-4">{modalContent.title}</h2>
-                        <p>{modalContent.content}</p>
-                        <button
-                            className="mt-8 bg-blue-500 text-white px-4 py-2 rounded"
-                            onClick={closeModal}
-                        >
-                            Close
-                        </button>
+
+                {selectedChart && (
+                    <div className="fixed inset-0 z-10 overflow-y-auto">
+                        <div className="flex items-center justify-center h-screen">
+                            <div
+                                className="fixed inset-0 transition-opacity"
+                                aria-hidden="true"
+                                onClick={() => setSelectedChart(null)}
+                            >
+                                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                            </div>
+                            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-6xl w-full flex flex-col py-16 px-24">
+                                <div className="bg-white flex-none text-2xl font-bold mb-4 text-center text-darkTeal">
+                                    {selectedChart.title}
+                                </div>
+                                <div className="bg-white flex-1 overflow-y-auto">
+                                    {selectedChart.chart}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </Modal>
+                )}
             </div>
         </div>
     );
